@@ -38,6 +38,10 @@ public:
     class const_iterator;
     const_iterator begin() const;
     const_iterator end() const;
+
+    class reverse_iterator;
+    reverse_iterator rbegin();
+    reverse_iterator rend();
 };
 
 template <class T>   
@@ -225,6 +229,64 @@ void List<T>::insert_before(Node<T>* next_node, const T& data)
         ~const_iterator() = default;
     };
 
+//*************reverse_iterator********************************************************
 
+    template<class T>
+    typename List<T>::reverse_iterator List<T>::rbegin()
+    {
+        return reverse_iterator(tail);
+    }
+
+    template<class T>
+    typename List<T>::reverse_iterator List<T>::rend()
+    {
+        return nullptr;
+    }
+
+
+    template<class T>
+    class List<T>::reverse_iterator
+    {
+    private:
+        Node<T>* curr;
+        reverse_iterator(Node<T>* curr) : curr(curr) {};
+        friend class List<T>;
+
+    public:
+        // Assumptions: non for all iterator's methods
+
+        T& operator*() const
+        {
+            assert(curr != nullptr);
+            return curr->data;
+        }
+
+        reverse_iterator& operator++()
+        {
+            curr = curr->previous;
+            return *this;
+        }
+
+        reverse_iterator operator++(int)
+        {
+            reverse_iterator result = *this;
+            ++*this;
+            return result;
+        }
+
+        bool operator==(const reverse_iterator& it) const
+        {
+            return curr == it.curr;
+        }
+
+        bool operator!=(const reverse_iterator& it) const
+        {
+            return !(*this==it);
+        }
+
+        reverse_iterator(const reverse_iterator&) = default;
+        reverse_iterator& operator=(const reverse_iterator&) = default;
+        ~reverse_iterator() = default;
+    };
 
 #endif //WET1_LIST_H
