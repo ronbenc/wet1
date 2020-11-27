@@ -23,13 +23,12 @@ private:
 
 public:
     List();
+    List(const List& to_copy);
     ~List();
     bool is_empty() const;
     void push(const T& data); //consider removing
     void pop(); //consider removing
-    T& top(); //consider removing
-
-    void insert_before(Node<T>* next_node, const T& data);
+    T& top(); //consider removing  
 
     class iterator;
     iterator begin();
@@ -42,21 +41,34 @@ public:
     class reverse_iterator;
     reverse_iterator rbegin();
     reverse_iterator rend();
+
+    class const_reverse_iterator;
+    const_reverse_iterator rbegin() const;
+    const_reverse_iterator rend() const;
+
+    iterator insert_before(iterator pos, const T& data);
+    iterator erase(iterator pos);
+    iterator find(const T& data); //find first occurance
 };
 
 template <class T>   
 List<T>::List(): head(nullptr), tail(nullptr) {}
 
 template <class T>   
+List<T>::List(const List& to_copy): head(nullptr), tail(nullptr) 
+{
+    assert(this->is_empty());
+    for(const T& item : to_copy)
+        this->insert_before(this->end(), item);
+}
+
+template <class T>   
 List<T>::~List()
 {
-    while (head != nullptr)
+    while (this->begin() != nullptr)
     {
-        Node<T>* next_node = head->next;
-        delete head;
-        head = next_node;
+        erase(this->begin());
     }
-    
 }
 template<class T>
 bool List<T>::is_empty() const
@@ -99,14 +111,80 @@ T& List<T>::top()
 }
 
 template<class T>
-void List<T>::insert_before(Node<T>* next_node, const T& data)
+typename List<T>::iterator List<T>::insert_before(iterator pos, const T& data)
 {
+    if(this->is_empty()) //case 1: the list is empty
+    {
+        push(data);
+        return this->begin();
+    }
+
     Node<T>* new_node = new Node<T>(data);
-    new_node->previous = next_node->previous;
-    new_node->next = next_node;
-    next_node->previous = new_node;
-    if(head == next_node)
-        head = new_node;
+    Node<T>* next_node = pos.curr;
+
+    if(next_node == nullptr) //case 2: inserting an item to the end
+    {
+        new_node->previous = tail;
+        new_node->next = next_node;
+        (new_node->previous)->next = new_node;
+        tail = new_node;
+    }
+
+    else //case 3: inserting before an existing item
+    {
+        new_node->next = next_node;
+        if(next_node->previous != nullptr)
+        {
+            new_node->previous =(next_node->previous);
+            (next_node->previous)->next = new_node;        
+        }
+        else
+        {
+            head = new_node;
+        }
+        next_node->previous = new_node;
+    }
+    
+    return iterator(new_node);
+}
+
+template<class T>
+typename List<T>::iterator List<T>::erase(iterator pos)
+{
+    Node<T>* to_delete = pos.curr;
+    if(to_delete->previous == nullptr) //to_delete is the head
+    {
+        head = to_delete->next;
+    }
+    else
+    {
+        (to_delete->previous)->next = to_delete->next;
+    }
+
+    if(to_delete->next == nullptr) //to_delete is the tail
+    {
+        tail = to_delete->previous;
+    }
+    else
+    {
+        (to_delete->next)->previous = to_delete->previous;
+    }
+
+    delete to_delete;
+    return ++pos;
+}
+
+template<class T>
+typename List<T>::iterator List<T>::find(const T& data)
+{
+    List<T>::iterator it = this->begin();
+    for(it; it!=this->end(); ++it)
+    {
+        if(*it == data)
+            break;
+    }
+
+    return it;
 }
 
 //*************iterator********************************************************
@@ -122,7 +200,6 @@ void List<T>::insert_before(Node<T>* next_node, const T& data)
     {
         return nullptr;
     }
-
 
     template<class T>
     class List<T>::iterator
@@ -143,12 +220,14 @@ void List<T>::insert_before(Node<T>* next_node, const T& data)
 
         iterator& operator++()
         {
+            assert(curr != nullptr);
             curr = curr->next;
             return *this;
         }
 
         iterator operator++(int)
         {
+            assert(curr != nullptr);
             iterator result = *this;
             ++*this;
             return result;
@@ -174,7 +253,7 @@ void List<T>::insert_before(Node<T>* next_node, const T& data)
     template<class T>
     typename List<T>::const_iterator List<T>::begin() const
     {
-        return iterator(head);
+        return const_iterator(head);
     }
 
     template<class T>
@@ -182,7 +261,6 @@ void List<T>::insert_before(Node<T>* next_node, const T& data)
     {
         return nullptr;
     }
-
 
     template<class T>
     class List<T>::const_iterator
@@ -203,23 +281,25 @@ void List<T>::insert_before(Node<T>* next_node, const T& data)
 
         const_iterator& operator++()
         {
+            assert(curr != nullptr);
             curr = curr->next;
             return *this;
         }
 
         const_iterator operator++(int)
         {
+            assert(curr != nullptr);
             iterator result = *this;
             ++*this;
             return result;
         }
 
-        bool operator==(const iterator& it) const
+        bool operator==(const const_iterator& it) const
         {
             return curr == it.curr;
         }
 
-        bool operator!=(const iterator& it) const
+        bool operator!=(const const_iterator& it) const
         {
             return !(*this==it);
         }
@@ -243,7 +323,6 @@ void List<T>::insert_before(Node<T>* next_node, const T& data)
         return nullptr;
     }
 
-
     template<class T>
     class List<T>::reverse_iterator
     {
@@ -263,12 +342,14 @@ void List<T>::insert_before(Node<T>* next_node, const T& data)
 
         reverse_iterator& operator++()
         {
+            assert(curr != nullptr);
             curr = curr->previous;
             return *this;
         }
 
         reverse_iterator operator++(int)
         {
+            assert(curr != nullptr);
             reverse_iterator result = *this;
             ++*this;
             return result;
@@ -287,6 +368,68 @@ void List<T>::insert_before(Node<T>* next_node, const T& data)
         reverse_iterator(const reverse_iterator&) = default;
         reverse_iterator& operator=(const reverse_iterator&) = default;
         ~reverse_iterator() = default;
+    };
+
+//*************const_reverse_iterator********************************************************
+
+    template<class T>
+    typename List<T>::const_reverse_iterator List<T>::rbegin() const
+    {
+        return const_reverse_iterator(tail);
+    }
+
+    template<class T>
+    typename List<T>::const_reverse_iterator List<T>::rend() const
+    {
+        return nullptr;
+    }
+
+
+    template<class T>
+    class List<T>::const_reverse_iterator
+    {
+    private:
+        Node<T>* curr;
+        const_reverse_iterator(Node<T>* curr) : curr(curr) {};
+        friend class List<T>;
+
+    public:
+        // Assumptions: non for all iterator's methods
+
+        const T& operator*() const
+        {
+            assert(curr != nullptr);
+            return curr->data;
+        }
+
+        const_reverse_iterator& operator++()
+        {
+            assert(curr != nullptr);
+            curr = curr->previous;
+            return *this;
+        }
+
+        const_reverse_iterator operator++(int)
+        {
+            assert(curr != nullptr);
+            const_reverse_iterator result = *this;
+            ++*this;
+            return result;
+        }
+
+        bool operator==(const const_reverse_iterator& it) const
+        {
+            return curr == it.curr;
+        }
+
+        bool operator!=(const const_reverse_iterator& it) const
+        {
+            return !(*this==it);
+        }
+
+        const_reverse_iterator(const const_reverse_iterator&) = default;
+        const_reverse_iterator& operator=(const const_reverse_iterator&) = default;
+        ~const_reverse_iterator() = default;
     };
 
 #endif //WET1_LIST_H
