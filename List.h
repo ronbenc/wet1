@@ -34,6 +34,10 @@ public:
     class iterator;
     iterator begin();
     iterator end();
+
+    class const_iterator;
+    const_iterator begin() const;
+    const_iterator end() const;
 };
 
 template <class T>   
@@ -127,21 +131,18 @@ void List<T>::insert_before(Node<T>* next_node, const T& data)
     public:
         // Assumptions: non for all iterator's methods
 
-        //dereference current element to access element
         T& operator*() const
         {
             assert(curr != nullptr);
             return curr->data;
         }
 
-        //advance iterator to next element in a matrix (prefix)
         iterator& operator++()
         {
             curr = curr->next;
             return *this;
         }
 
-        //advance iterator to next element in a matrix (postfix)
         iterator operator++(int)
         {
             iterator result = *this;
@@ -149,26 +150,79 @@ void List<T>::insert_before(Node<T>* next_node, const T& data)
             return result;
         }
 
-        //true if iterator are equal iterators. false otherwise
         bool operator==(const iterator& it) const
         {
             return curr == it.curr;
         }
 
-        //true if iterator are not equal iterators. false otherwise
         bool operator!=(const iterator& it) const
         {
             return !(*this==it);
         }
 
-        //iterator constructor
         iterator(const iterator&) = default;
-
-        //iterator assigment operator
         iterator& operator=(const iterator&) = default;
-
-        //iterator destructor
         ~iterator() = default;
+    };
+
+//*************const_iterator********************************************************
+
+    template<class T>
+    typename List<T>::const_iterator List<T>::begin() const
+    {
+        return iterator(head);
+    }
+
+    template<class T>
+    typename List<T>::const_iterator List<T>::end() const
+    {
+        return nullptr;
+    }
+
+
+    template<class T>
+    class List<T>::const_iterator
+    {
+    private:
+        Node<T>* curr;
+        const_iterator(Node<T>* curr) : curr(curr) {};
+        friend class List<T>;
+
+    public:
+        // Assumptions: non for all iterator's methods
+
+        const T& operator*() const
+        {
+            assert(curr != nullptr);
+            return curr->data;
+        }
+
+        const_iterator& operator++()
+        {
+            curr = curr->next;
+            return *this;
+        }
+
+        const_iterator operator++(int)
+        {
+            iterator result = *this;
+            ++*this;
+            return result;
+        }
+
+        bool operator==(const iterator& it) const
+        {
+            return curr == it.curr;
+        }
+
+        bool operator!=(const iterator& it) const
+        {
+            return !(*this==it);
+        }
+
+        const_iterator(const const_iterator&) = default;
+        const_iterator& operator=(const const_iterator&) = default;
+        ~const_iterator() = default;
     };
 
 
