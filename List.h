@@ -26,7 +26,8 @@ public:
     List(const List& to_copy);
     ~List();
     bool is_empty() const;
-    void push(const T& data); //consider removing
+    void push_front(const T& data); 
+    void push_back(const T& data);
     void pop(); //consider removing
     T& top(); //consider removing  
 
@@ -77,7 +78,7 @@ bool List<T>::is_empty() const
 }
 
 template<class T>
-void List<T>::push(const T& data)
+void List<T>::push_front(const T& data)
 {
     Node<T>* new_node = new Node<T>(data);
 
@@ -92,7 +93,21 @@ void List<T>::push(const T& data)
     }
     
     head = new_node;
-    return;
+}
+
+template<class T>
+void List<T>::push_back(const T& data)
+{
+    if(this->is_empty())
+    {
+        push_front(data);
+    }
+
+    Node<T>* new_node = new Node<T>(data);
+
+    new_node->previous = tail;
+    (new_node->previous)->next = new_node;
+    tail = new_node;
 }
 
 template<class T>
@@ -113,38 +128,26 @@ T& List<T>::top()
 template<class T>
 typename List<T>::iterator List<T>::insert_before(iterator pos, const T& data)
 {
-    if(this->is_empty()) //case 1: the list is empty
+    if(pos == this->end()) 
     {
-        push(data);
-        return this->begin();
+        push_back(data);
+        return iterator(tail);
+    }
+
+    if(pos == this->begin())
+    {
+        push_front(data);
+        return iterator(head);
     }
 
     Node<T>* new_node = new Node<T>(data);
     Node<T>* next_node = pos.curr;
 
-    if(next_node == nullptr) //case 2: inserting an item to the end
-    {
-        new_node->previous = tail;
-        new_node->next = next_node;
-        (new_node->previous)->next = new_node;
-        tail = new_node;
-    }
-
-    else //case 3: inserting before an existing item
-    {
-        new_node->next = next_node;
-        if(next_node->previous != nullptr)
-        {
-            new_node->previous =(next_node->previous);
-            (next_node->previous)->next = new_node;        
-        }
-        else
-        {
-            head = new_node;
-        }
-        next_node->previous = new_node;
-    }
-    
+    new_node->next = next_node;
+    new_node->previous =(next_node->previous);
+    (next_node->previous)->next = new_node;        
+    next_node->previous = new_node;
+  
     return iterator(new_node);
 }
 
