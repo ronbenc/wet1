@@ -17,7 +17,7 @@ public:
 template <class T>
 class List
 {
-private:
+protected:
     Node<T> *head;
     Node<T> *tail;
 
@@ -60,7 +60,7 @@ List<T>::List(const List& to_copy): head(nullptr), tail(nullptr)
 {
     assert(this->is_empty());
     for(const T& item : to_copy)
-        this->insert_before(this->end(), item);
+        this->push_back(item);
 }
 
 template <class T>   
@@ -100,7 +100,7 @@ void List<T>::push_back(const T& data)
 {
     if(this->is_empty())
     {
-        push_front(data);
+        return push_front(data);
     }
 
     Node<T>* new_node = new Node<T>(data);
