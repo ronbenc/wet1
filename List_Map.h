@@ -298,7 +298,6 @@ typename List_Map<S, T>::iterator List_Map<S, T>::erase(const S& key)
             return *curr;
         }
 
-
         const const_iterator& operator++()
         {
             assert(curr != nullptr);
@@ -354,10 +353,16 @@ typename List_Map<S, T>::iterator List_Map<S, T>::erase(const S& key)
     public:
         // Assumptions: non for all reverse_iterator's methods
 
-        T& operator*() const
+        Map_Node<S, T>* operator->() const
         {
             assert(curr != nullptr);
-            return curr->data;
+            return curr;
+        }
+
+        Map_Node<S, T>& operator*() const
+        {
+            assert(curr != nullptr);
+            return *curr;
         }
 
         reverse_iterator& operator++()
@@ -395,7 +400,7 @@ typename List_Map<S, T>::iterator List_Map<S, T>::erase(const S& key)
     template <class S, class T>
     typename List_Map<S, T>::const_reverse_iterator List_Map<S, T>::rbegin() const
     {
-        return reverse_iterator(tail);
+        return const_reverse_iterator(tail);
     }
 
     template <class S, class T>
@@ -415,12 +420,17 @@ typename List_Map<S, T>::iterator List_Map<S, T>::erase(const S& key)
     public:
         // Assumptions: non for all const_reverse_iterator's methods
 
-        T& operator*() const
+       const Map_Node<S, T>* operator->() const
         {
             assert(curr != nullptr);
-            return curr->data;
+            return curr;
         }
 
+        const Map_Node<S, T>& operator*() const
+        {
+            assert(curr != nullptr);
+            return *curr;
+        }
         const_reverse_iterator& operator++()
         {
             assert(curr != nullptr);
