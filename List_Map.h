@@ -6,7 +6,7 @@ template <class S, class T>
 class Map_Node
 {
 public:
-    S key;
+    const S key;
     T value;
     Map_Node* next;
     Map_Node* previous;
@@ -46,6 +46,8 @@ public:
     const_reverse_iterator rend() const;
 
     iterator erase(iterator pos);
+    iterator erase(const S& key);
+    iterator insert(const S& key, const T& value = T());
 
 private:
     void push_front(const S& key); 
@@ -57,11 +59,11 @@ template <class S, class T>
 List_Map<S, T>::List_Map(): head(nullptr), tail(nullptr) {}
 
 template <class S, class T>
-List_Map<S, T>::List_Map(const List_Map& to_copy): head(nullptr), tail(nullptr) 
+List_Map<S, T>::List_Map(const List_Map<S, T>& to_copy): head(nullptr), tail(nullptr) 
 {
     assert(this->is_empty());
-    for(const T& item : to_copy)
-        this->push_back(item);
+    for(const Map_Node<S, T>& curr : to_copy)
+        this->insert(curr.key, curr.value);
 }
 
 template <class S, class T>
@@ -78,9 +80,8 @@ bool List_Map<S, T>::is_empty() const
     return (head == nullptr);
 }
 
-//assumptions on S: '<' operator defined
 template <class S, class T>
-T& List_Map<S, T>::operator[] (const S& key)
+typename List_Map<S, T>::iterator List_Map<S, T>::insert(const S& key, const T& value )
 {
     List_Map<S, T>::iterator it = this->begin();
     for(it; it != this->end() && it->key < key; ++it);
@@ -88,7 +89,17 @@ T& List_Map<S, T>::operator[] (const S& key)
     {
         it = insert_before(it, key);
     }
+    it->value = value;
+    
+    return it;
+}
 
+
+//assumptions on S: '<' operator defined
+template <class S, class T>
+T& List_Map<S, T>::operator[] (const S& key)
+{
+    List_Map<S, T>::iterator it = insert(key);
     return it->value;
 }
 
@@ -177,6 +188,14 @@ typename List_Map<S, T>::iterator List_Map<S, T>::erase(iterator pos)
     return ++pos;
 }
 
+template <class S, class T>
+typename List_Map<S, T>::iterator List_Map<S, T>::erase(const S& key)
+{
+    List_Map<S, T>::iterator it = this->begin();
+    for(it ; it!= this->end() && it->key != key; ++it);
+    return erase(it);
+}
+
 //*************iterator********************************************************
 
     template <class S, class T>
@@ -201,11 +220,16 @@ typename List_Map<S, T>::iterator List_Map<S, T>::erase(iterator pos)
 
     public:
         // Assumptions: non for all iterator's methods
-
         Map_Node<S, T>* operator->() const
         {
             assert(curr != nullptr);
             return curr;
+        }
+
+        Map_Node<S, T>& operator*() const
+        {
+            assert(curr != nullptr);
+            return *curr;
         }
 
         iterator& operator++()
@@ -242,7 +266,7 @@ typename List_Map<S, T>::iterator List_Map<S, T>::erase(iterator pos)
     template <class S, class T>
     typename List_Map<S, T>::const_iterator List_Map<S, T>::begin() const
     {
-        return iterator(head);
+        return const_iterator(head);
     }
 
     template <class S, class T>
@@ -262,20 +286,27 @@ typename List_Map<S, T>::iterator List_Map<S, T>::erase(iterator pos)
     public:
         // Assumptions: non for all const_iterator's methods
 
-        T& operator*() const
+        const Map_Node<S, T>* operator->() const
         {
             assert(curr != nullptr);
-            return curr->data;
+            return curr;
         }
 
-        const_iterator& operator++()
+        const Map_Node<S, T>& operator*() const
+        {
+            assert(curr != nullptr);
+            return *curr;
+        }
+
+
+        const const_iterator& operator++()
         {
             assert(curr != nullptr);
             curr = curr->next;
             return *this;
         }
 
-        const_iterator operator++(int)
+        const const_iterator operator++(int)
         {
             assert(curr != nullptr);
             const_iterator result = *this;
