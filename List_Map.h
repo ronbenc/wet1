@@ -1,35 +1,33 @@
-#ifndef WET1_LIST_H
-#define WET1_LIST_H
+#ifndef WET1_LIST_MAP_H
+#define WET1_LIST_MAP_H
 #include <cassert>
 
-template <class T>
-class Node
+template <class S, class T>
+class Map_Node
 {
 public:
-    T data;
-    Node* next;
-    Node* previous;
+    S key;
+    T value;
+    Map_Node* next;
+    Map_Node* previous;
 
-    Node(const T& data) : data(data), next(nullptr), previous(nullptr) {};
-    ~Node() = default;
+    Map_Node(const S& key) : key(key), next(nullptr), previous(nullptr) {};
+    ~Map_Node() = default;
 };
 
-template <class T>
-class List
+template <class S, class T>
+class List_Map
 {
 private:
-    Node<T> *head;
-    Node<T> *tail;
+    Map_Node<S, T> *head;
+    Map_Node<S, T> *tail;
 
 public:
-    List();
-    List(const List& to_copy);
-    ~List();
+    List_Map();
+    List_Map(const List_Map& to_copy);
+    ~List_Map();
     bool is_empty() const;
-    void push_front(const T& data); 
-    void push_back(const T& data);
-    void pop(); //consider removing
-    T& top(); //consider removing  
+    T& operator[] (const S& key);
 
     class iterator;
     iterator begin();
@@ -47,40 +45,57 @@ public:
     const_reverse_iterator rbegin() const;
     const_reverse_iterator rend() const;
 
-    iterator insert_before(iterator pos, const T& data);
     iterator erase(iterator pos);
-    iterator find(const T& data); //find first occurance
+
+private:
+    void push_front(const S& key); 
+    void push_back(const S& key);
+    iterator insert_before(iterator pos, const S& key);
 };
 
-template <class T>   
-List<T>::List(): head(nullptr), tail(nullptr) {}
+template <class S, class T>
+List_Map<S, T>::List_Map(): head(nullptr), tail(nullptr) {}
 
-template <class T>   
-List<T>::List(const List& to_copy): head(nullptr), tail(nullptr) 
+template <class S, class T>
+List_Map<S, T>::List_Map(const List_Map& to_copy): head(nullptr), tail(nullptr) 
 {
     assert(this->is_empty());
     for(const T& item : to_copy)
         this->push_back(item);
 }
 
-template <class T>   
-List<T>::~List()
+template <class S, class T>
+List_Map<S, T>::~List_Map()
 {
     while (this->begin() != nullptr)
     {
         erase(this->begin());
     }
 }
-template<class T>
-bool List<T>::is_empty() const
+template <class S, class T>
+bool List_Map<S, T>::is_empty() const
 {
     return (head == nullptr);
 }
 
-template<class T>
-void List<T>::push_front(const T& data)
+//assumptions on S: '<' operator defined
+template <class S, class T>
+T& List_Map<S, T>::operator[] (const S& key)
 {
-    Node<T>* new_node = new Node<T>(data);
+    List_Map<S, T>::iterator it = this->begin();
+    for(it; it != this->end() && it->key < key; ++it);
+    if(it == this->end() || it->key != key)
+    {
+        it = insert_before(it, key);
+    }
+
+    return it->value;
+}
+
+template <class S, class T>
+void List_Map<S, T>::push_front(const S& key)
+{
+    Map_Node<S, T>* new_node = new Map_Node<S, T>(key);
 
     if(this->is_empty())
     {
@@ -95,53 +110,38 @@ void List<T>::push_front(const T& data)
     head = new_node;
 }
 
-template<class T>
-void List<T>::push_back(const T& data)
+template <class S, class T>
+void List_Map<S, T>::push_back(const S& key)
 {
     if(this->is_empty())
     {
-        return push_front(data);
+        return push_front(key);
     }
 
-    Node<T>* new_node = new Node<T>(data);
+    Map_Node<S, T>* new_node = new Map_Node<S, T>(key);
 
     new_node->previous = tail;
     (new_node->previous)->next = new_node;
     tail = new_node;
 }
 
-template<class T>
-void List<T>::pop()
-{
-    Node<T>* to_remove = head;
-    head = head->next;
-    head->previous = nullptr;
-    delete to_remove;
-}
-
-template<class T>
-T& List<T>::top()
-{
-    return head->data;
-}
-
-template<class T>
-typename List<T>::iterator List<T>::insert_before(iterator pos, const T& data)
+template <class S, class T>
+typename List_Map<S, T>::iterator List_Map<S, T>::insert_before(iterator pos, const S& key)
 {
     if(pos == this->end()) 
     {
-        push_back(data);
+        push_back(key);
         return iterator(tail);
     }
 
     if(pos == this->begin())
     {
-        push_front(data);
+        push_front(key);
         return iterator(head);
     }
 
-    Node<T>* new_node = new Node<T>(data);
-    Node<T>* next_node = pos.curr;
+    Map_Node<S, T>* new_node = new Map_Node<S, T>(key);
+    Map_Node<S, T>* next_node = pos.curr;
 
     new_node->next = next_node;
     new_node->previous =(next_node->previous);
@@ -151,10 +151,10 @@ typename List<T>::iterator List<T>::insert_before(iterator pos, const T& data)
     return iterator(new_node);
 }
 
-template<class T>
-typename List<T>::iterator List<T>::erase(iterator pos)
+template <class S, class T>
+typename List_Map<S, T>::iterator List_Map<S, T>::erase(iterator pos)
 {
-    Node<T>* to_delete = pos.curr;
+     Map_Node<S, T>* to_delete = pos.curr;
     if(to_delete->previous == nullptr) //to_delete is the head
     {
         head = to_delete->next;
@@ -177,48 +177,35 @@ typename List<T>::iterator List<T>::erase(iterator pos)
     return ++pos;
 }
 
-template<class T>
-typename List<T>::iterator List<T>::find(const T& data)
-{
-    List<T>::iterator it = this->begin();
-    for(it; it!=this->end(); ++it)
-    {
-        if(*it == data)
-            break;
-    }
-
-    return it;
-}
-
 //*************iterator********************************************************
 
-    template<class T>
-    typename List<T>::iterator List<T>::begin()
+    template <class S, class T>
+    typename List_Map<S, T>::iterator List_Map<S, T>::begin()
     {
         return iterator(head);
     }
 
-    template<class T>
-    typename List<T>::iterator List<T>::end()
+    template <class S, class T>
+    typename List_Map<S, T>::iterator List_Map<S, T>::end()
     {
         return nullptr;
     }
 
-    template<class T>
-    class List<T>::iterator
+    template <class S, class T>
+    class List_Map<S, T>::iterator
     {
     private:
-        Node<T>* curr;
-        iterator(Node<T>* curr) : curr(curr) {};
-        friend class List<T>;
+        Map_Node<S, T>* curr;
+        iterator(Map_Node<S, T>* curr) : curr(curr) {};
+        friend class List_Map<S, T>;
 
     public:
         // Assumptions: non for all iterator's methods
 
-        T& operator*() const
+        Map_Node<S, T>* operator->() const
         {
             assert(curr != nullptr);
-            return curr->data;
+            return curr;
         }
 
         iterator& operator++()
@@ -252,31 +239,30 @@ typename List<T>::iterator List<T>::find(const T& data)
     };
 
 //*************const_iterator********************************************************
-
-    template<class T>
-    typename List<T>::const_iterator List<T>::begin() const
+    template <class S, class T>
+    typename List_Map<S, T>::const_iterator List_Map<S, T>::begin() const
     {
-        return const_iterator(head);
+        return iterator(head);
     }
 
-    template<class T>
-    typename List<T>::const_iterator List<T>::end() const
+    template <class S, class T>
+    typename List_Map<S, T>::const_iterator List_Map<S, T>::end() const
     {
         return nullptr;
     }
 
-    template<class T>
-    class List<T>::const_iterator
+    template <class S, class T>
+    class List_Map<S, T>::const_iterator
     {
     private:
-        Node<T>* curr;
-        const_iterator(Node<T>* curr) : curr(curr) {};
-        friend class List<T>;
+        Map_Node<S, T>* curr;
+        const_iterator(Map_Node<S, T>* curr) : curr(curr) {};
+        friend class List_Map<S, T>;
 
     public:
-        // Assumptions: non for all iterator's methods
+        // Assumptions: non for all const_iterator's methods
 
-        const T& operator*() const
+        T& operator*() const
         {
             assert(curr != nullptr);
             return curr->data;
@@ -292,7 +278,7 @@ typename List<T>::iterator List<T>::find(const T& data)
         const_iterator operator++(int)
         {
             assert(curr != nullptr);
-            iterator result = *this;
+            const_iterator result = *this;
             ++*this;
             return result;
         }
@@ -314,28 +300,28 @@ typename List<T>::iterator List<T>::find(const T& data)
 
 //*************reverse_iterator********************************************************
 
-    template<class T>
-    typename List<T>::reverse_iterator List<T>::rbegin()
+    template <class S, class T>
+    typename List_Map<S, T>::reverse_iterator List_Map<S, T>::rbegin()
     {
         return reverse_iterator(tail);
     }
 
-    template<class T>
-    typename List<T>::reverse_iterator List<T>::rend()
+    template <class S, class T>
+    typename List_Map<S, T>::reverse_iterator List_Map<S, T>::rend()
     {
         return nullptr;
     }
 
-    template<class T>
-    class List<T>::reverse_iterator
+    template <class S, class T>
+    class List_Map<S, T>::reverse_iterator
     {
     private:
-        Node<T>* curr;
-        reverse_iterator(Node<T>* curr) : curr(curr) {};
-        friend class List<T>;
+        Map_Node<S, T>* curr;
+        reverse_iterator( Map_Node<S, T>* curr) : curr(curr) {};
+        friend class List_Map<S, T>;
 
     public:
-        // Assumptions: non for all iterator's methods
+        // Assumptions: non for all reverse_iterator's methods
 
         T& operator*() const
         {
@@ -375,31 +361,30 @@ typename List<T>::iterator List<T>::find(const T& data)
 
 //*************const_reverse_iterator********************************************************
 
-    template<class T>
-    typename List<T>::const_reverse_iterator List<T>::rbegin() const
+    template <class S, class T>
+    typename List_Map<S, T>::const_reverse_iterator List_Map<S, T>::rbegin() const
     {
-        return const_reverse_iterator(tail);
+        return reverse_iterator(tail);
     }
 
-    template<class T>
-    typename List<T>::const_reverse_iterator List<T>::rend() const
+    template <class S, class T>
+    typename List_Map<S, T>::const_reverse_iterator List_Map<S, T>::rend() const
     {
         return nullptr;
     }
 
-
-    template<class T>
-    class List<T>::const_reverse_iterator
+    template <class S, class T>
+    class List_Map<S, T>::const_reverse_iterator
     {
     private:
-        Node<T>* curr;
-        const_reverse_iterator(Node<T>* curr) : curr(curr) {};
-        friend class List<T>;
+        Map_Node<S, T>* curr;
+        const_reverse_iterator( Map_Node<S, T>* curr) : curr(curr) {};
+        friend class List_Map<S, T>;
 
     public:
-        // Assumptions: non for all iterator's methods
+        // Assumptions: non for all const_reverse_iterator's methods
 
-        const T& operator*() const
+        T& operator*() const
         {
             assert(curr != nullptr);
             return curr->data;
@@ -415,7 +400,7 @@ typename List<T>::iterator List<T>::find(const T& data)
         const_reverse_iterator operator++(int)
         {
             assert(curr != nullptr);
-            const_reverse_iterator result = *this;
+            reverse_iterator result = *this;
             ++*this;
             return result;
         }
