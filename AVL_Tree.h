@@ -30,6 +30,22 @@ AVL_Tree<T>::AVL_Tree(const TreeNode<T>& r)
     root = r;
 }
 
+template<class T>
+AVL_Tree<T>::~AVL_Tree()
+{
+    if(!this->getLeft() && !this->getRight())
+    {
+        return;
+    }
+    if(!this->getLeft())
+    {
+        //AVL
+    }
+
+    delete this->root->getLeft();
+    delete this->root->getRight();
+}
+
 //************non-class member functions' implementations***********
 
 

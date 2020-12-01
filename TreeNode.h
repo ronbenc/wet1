@@ -19,13 +19,13 @@ class TreeNode
     // TreeNode() = delete;
     explicit TreeNode(const T& = T(), TreeNode<T>* left = nullptr, TreeNode<T>* right = nullptr);//checked
     TreeNode(const TreeNode<T>& toCopy) : data(toCopy.data), l(toCopy.l), r(toCopy.r), height(toCopy.height) {};//checked
-    ~TreeNode() = default;//checked
+    ~TreeNode();//checked
     
     // TreeNode& operator= (const TreeNode&);
 
 
     //****************getters and setters***********
-    void heightCalc();
+    void heightCalc();//checked
     const T& getData() const;//checked
     const TreeNode* getLeft() const;//checked
     const TreeNode* getRight() const;//checked
@@ -73,6 +73,28 @@ TreeNode<T>::TreeNode(const T& input, TreeNode<T>* left, TreeNode<T>* right)
     r = right;
     this->heightCalc();
     
+}
+
+template<class T>
+TreeNode<T>::~TreeNode()
+{
+    if(!this->getLeft() && !this->getRight())
+    {
+        //do something (or actually nothing needed)
+    }
+    else if(!this->getLeft())
+    {
+        delete this->getRight();
+    }
+    else if(!this->getRight())
+    {
+        delete this->getLeft();
+    }
+    else
+    {
+        delete this->getLeft();
+        delete this->getRight();
+    }
 }
 
 template<class T>
