@@ -8,14 +8,17 @@
 template<class T>
 class AVL_Tree
 {
-    public:
-    TreeNode<T> root;
+    private:
+    TreeNode<T>* root;
+    TreeNode<T>* llrotation();
+    TreeNode<T>* rrrotation();
+    TreeNode<T>* lrrotation();
+    TreeNode<T>* rlrotation();
 
-    //******************constructors & destructors*****************
-    AVL_Tree(const TreeNode<T>& r = TreeNode<T>());
-    ~AVL_Tree();
+    public:
     
-    //************class member functions' declarations***********
+    AVL_Tree(const TreeNode<T>& r = TreeNode<T>());
+    ~AVL_Tree();    
     TreeNode<T>* getRoot();
 
 };
@@ -66,7 +69,51 @@ TreeNode<T>* AVL_Tree<T>::getRoot()
     return &this->root;
 }
 
-//************non-class member functions' implementations***********
+template<class T>
+TreeNode<T>* AVL_Tree<T>::llrotation()
+{
+    TreeNode<T>* new_root = this->getRoot()->getLeft();
+    TreeNode<T>* prev_root = this->getRoot();
+    prev_root->setLeft(new_root->getRight())
+    new_root->setRight(prev_root);
+    return new_root;
+}
+
+template <class T>
+TreeNode<T>* AVL_Tree<T>::rrrotation()
+{
+    TreeNode<T>* new_root = this->getRoot()->getRight();
+    TreeNode<T>* prev_root = this->getRoot();
+    prev_root->setRight(new_root->getLeft())
+    new_root->setLeft(prev_root);
+    return new_root;
+}
+
+template<class T>
+TreeNode<T>* AVL_Tree<T>:: lrrotation()
+{
+    TreeNode<T>* new_root = this->getLeft()->getRight();
+    TreeNode<T>* prev_root = this->getRoot();
+    prev_root->getLeft()->setRight(new_root->getLeft());
+    new_root->setLeft(prev_root->getLeft());
+    prev_root->setLeft(new_root->getRight());
+    new_root->setRight(prev_root);
+    return new_root;
+}
+
+template<class T>
+TreeNode<T>* AVL_Tree<T>::rlrotation()
+{
+    TreeNode<T>* new_root = this->getRight()->getLeft();
+    TreeNode<T>* prev_root = this->getRoot();
+    prev_root->getRight()->setLeft(new_root->getRight());
+    new_root->setRight(prev_root->getRight());
+    prev_root->setRight(new_root->getLeft());
+    new_root->setLeft(prev_root);
+    return new_root;
+}
+
+
 
 
 
