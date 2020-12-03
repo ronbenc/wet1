@@ -16,7 +16,7 @@ class AVL_Tree
     ~AVL_Tree();
     
     //************class member functions' declarations***********
-
+    TreeNode<T>* getRoot();
 
 };
 
@@ -27,23 +27,43 @@ class AVL_Tree
 template<class T>
 AVL_Tree<T>::AVL_Tree(const TreeNode<T>& r)
 {
-    root = r;
+    TreeNode<T> r1 = r;
+    root = r1;
 }
 
 template<class T>
 AVL_Tree<T>::~AVL_Tree()
-{
-    if(!this->getLeft() && !this->getRight())
+{    
+    if(!this->getRoot()->getLeft() && !this->getRoot()->getRight())
     {
-        return;
+        delete this->getRoot();
     }
-    if(!this->getLeft())
+    else if(!this->getRoot()->getLeft())
     {
-        //AVL
+        AVL_Tree toDelete(*this->getRoot()->getLeft());
+        delete this->getRoot();
+        delete &toDelete;
     }
+    else if(!this->getRoot()->getRight())
+    {
+        AVL_Tree toDelete(*this->getRoot()->getRight());
+        delete this->getRoot();
+        delete &toDelete;        
+    }
+    else
+    {
+        AVL_Tree rightDelete(*this->getRoot()->getLeft());
+        AVL_Tree leftDelete(*this->getRoot()->getRight());
+        delete this->getRoot();
+        delete &leftDelete;
+        delete &rightDelete;        
+    }    
+}
 
-    delete this->root->getLeft();
-    delete this->root->getRight();
+template <class T>
+TreeNode<T>* AVL_Tree<T>::getRoot()
+{
+    return &this->root;
 }
 
 //************non-class member functions' implementations***********
