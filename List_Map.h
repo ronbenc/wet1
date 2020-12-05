@@ -23,12 +23,6 @@ private:
     Map_Node<S, T> *tail;
 
 public:
-    List_Map();
-    List_Map(const List_Map& to_copy);
-    ~List_Map();
-    bool is_empty() const;
-    T& operator[] (const S& key);
-
     class iterator;
     iterator begin();
     iterator end();
@@ -45,9 +39,15 @@ public:
     const_reverse_iterator rbegin() const;
     const_reverse_iterator rend() const;
 
+    List_Map();
+    List_Map(const List_Map& to_copy);
+    ~List_Map();
+    bool is_empty() const;
+    iterator insert(const S& key, const T& value = T());
+    T& operator[] (const S& key);
     iterator erase(iterator pos);
     iterator erase(const S& key);
-    iterator insert(const S& key, const T& value = T());
+
 
 private:
     void push_front(const S& key); 
@@ -74,12 +74,14 @@ List_Map<S, T>::~List_Map()
         erase(this->begin());
     }
 }
+
 template <class S, class T>
 bool List_Map<S, T>::is_empty() const
 {
     return (head == nullptr);
 }
 
+//assumptions on S: '<' operator defined
 template <class S, class T>
 typename List_Map<S, T>::iterator List_Map<S, T>::insert(const S& key, const T& value )
 {
@@ -94,14 +96,55 @@ typename List_Map<S, T>::iterator List_Map<S, T>::insert(const S& key, const T& 
     return it;
 }
 
-
 //assumptions on S: '<' operator defined
 template <class S, class T>
 T& List_Map<S, T>::operator[] (const S& key)
 {
-    List_Map<S, T>::iterator it = insert(key);
+    List_Map<S, T>::iterator it = this->begin();
+    for(it; it != this->end() && it->key < key; ++it);
+    if(it == this->end() || it->key != key)
+    {
+        it = insert_before(it, key);
+    }
+
     return it->value;
 }
+
+template <class S, class T>
+typename List_Map<S, T>::iterator List_Map<S, T>::erase(iterator pos)
+{
+     Map_Node<S, T>* to_delete = pos.curr;
+    if(to_delete->previous == nullptr) //to_delete is the head
+    {
+        head = to_delete->next;
+    }
+    else
+    {
+        (to_delete->previous)->next = to_delete->next;
+    }
+
+    if(to_delete->next == nullptr) //to_delete is the tail
+    {
+        tail = to_delete->previous;
+    }
+    else
+    {
+        (to_delete->next)->previous = to_delete->previous;
+    }
+
+    delete to_delete;
+    return ++pos;
+}
+
+template <class S, class T>
+typename List_Map<S, T>::iterator List_Map<S, T>::erase(const S& key)
+{
+    List_Map<S, T>::iterator it = this->begin();
+    for(it ; it!= this->end() && it->key != key; ++it);
+    return erase(it);
+}
+
+//*************private methods********************************************************
 
 template <class S, class T>
 void List_Map<S, T>::push_front(const S& key)
@@ -162,39 +205,7 @@ typename List_Map<S, T>::iterator List_Map<S, T>::insert_before(iterator pos, co
     return iterator(new_node);
 }
 
-template <class S, class T>
-typename List_Map<S, T>::iterator List_Map<S, T>::erase(iterator pos)
-{
-     Map_Node<S, T>* to_delete = pos.curr;
-    if(to_delete->previous == nullptr) //to_delete is the head
-    {
-        head = to_delete->next;
-    }
-    else
-    {
-        (to_delete->previous)->next = to_delete->next;
-    }
 
-    if(to_delete->next == nullptr) //to_delete is the tail
-    {
-        tail = to_delete->previous;
-    }
-    else
-    {
-        (to_delete->next)->previous = to_delete->previous;
-    }
-
-    delete to_delete;
-    return ++pos;
-}
-
-template <class S, class T>
-typename List_Map<S, T>::iterator List_Map<S, T>::erase(const S& key)
-{
-    List_Map<S, T>::iterator it = this->begin();
-    for(it ; it!= this->end() && it->key != key; ++it);
-    return erase(it);
-}
 
 //*************iterator********************************************************
 
