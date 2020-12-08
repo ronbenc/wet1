@@ -42,7 +42,10 @@ AVL_Tree<T>::AVL_Tree(TreeNode<T>* r)
 template<class T>
 AVL_Tree<T>::~AVL_Tree()
 {    
-    delete this->getRoot();    
+    if(!this) {return;}
+    delete this->getRoot()->getLeft();
+    delete this->getRoot()->getRight();
+    delete this->getRoot();
 }
 
 template <class T>
