@@ -10,6 +10,8 @@ class AVL_Tree
 {
     private:
     TreeNode<T>* root;
+    TreeNode<T>* small;
+    int size;
 
 
     public:
@@ -19,24 +21,21 @@ class AVL_Tree
     TreeNode<T>* getRoot();
 
     //should be private
-    TreeNode<T>* llrotation();//checked
-    TreeNode<T>* rrrotation();//checked
-    TreeNode<T>* lrrotation();//checked
-    TreeNode<T>* rlrotation();//checked
+    TreeNode<T>* llrotation();
+    TreeNode<T>* rrrotation();
+    TreeNode<T>* lrrotation();
+    TreeNode<T>* rlrotation();
+    TreeNode<T>* findMin();
+    TreeNode<T>* findMax();
 };
 
 
 template<class T>
 AVL_Tree<T>::AVL_Tree(TreeNode<T>* r)
 {
-    if(!r)
-    {
-        root = new TreeNode<T>();
-    }
-    else
-    {
-        root = r;
-    }
+    if(!r) {root = new TreeNode<T>();}
+    else {root = r;}
+    small = this->findMin();
 }
 
 template<class T>
@@ -52,6 +51,28 @@ template <class T>
 TreeNode<T>* AVL_Tree<T>::getRoot()
 {
     return this->root;
+}
+
+template <class T>
+TreeNode<T>* AVL_Tree<T>::findMin()
+{
+    TreeNode<T>* node = this->getRoot();
+    while(node->getLeft())
+    {        
+        node = node->getLeft();
+    }
+    return node;
+}
+
+template <class T>
+TreeNode<T>* AVL_Tree<T>::findMax()
+{
+    TreeNode<T>* node = this->getRoot();
+    while(node->getRight())
+    {        
+        node = node->getRight();
+    }
+    return node;
 }
 
 template<class T>

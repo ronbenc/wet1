@@ -76,8 +76,6 @@ std::ostream& operator<<(std::ostream&, const TreeNode<T>&);//checked, might cha
 template<class T>
 TreeNode<T>::TreeNode(T input, TreeNode<T>* left, TreeNode<T>* right, TreeNode<T>* parent)
 {
-    // T* tmp_data = new T(*input);
-    // data = tmp_data;
     data = input;
     l = left;
     r = right;
@@ -106,18 +104,12 @@ TreeNode<T>::~TreeNode()
 template<class T>
 void TreeNode<T>::heightCalc()
 {
-    if (!this->getLeft() && !this->getRight()) {this->setHeight(0);}
-    else if (!this->getLeft())
-    {
-        this->setHeight((this->getRight())->getHeight() + 1);
-    }
-    else if (!this->getRight())
-    {
-        this->setHeight((this->getLeft())->getHeight() + 1);
-    }
+    if(!this) {this->setHeight(-1);}
     else
     {
-        this->setHeight(std::max((this->getLeft())->getHeight(), (this->getRight())->getHeight()) + 1);
+        int l_height = (this->getLeft() ? this->getLeft()->height : -1);
+        int r_height = (this->getRight() ? this->getRight()->height : -1);
+        this->setHeight(std::max(l_height, r_height) + 1);
     }
 }
 
