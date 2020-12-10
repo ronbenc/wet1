@@ -28,8 +28,10 @@ class AVL_Tree
     TreeNode<T>* rlrotation();
     TreeNode<T>* findMin();
     TreeNode<T>* findMax();
-    TreeNode<T>* insert(T, TreeNode<T>*);
-    void BTSearchParent(TreeNode<T>* toInsert, TreeNode<T>* parent);
+    // const T& BTSearchParent(TreeNode<T>* toInsert);
+    // void insert(TreeNode<T> *&nodePtr, TreeNode<T> *&newNode);
+    static void insert(T data, TreeNode<T>* = nullptr);
+    void insertNode(const T& data);
 
 };
 
@@ -123,55 +125,61 @@ TreeNode<T>* AVL_Tree<T>::findMax()
     return node;
 }
 
-// template <class T>
-// TreeNode<T>* AVL_Tree<T>::insert(T data, TreeNode<T>* toInsert)
-// {
-//     if(!toInsert)
-//     {
-//         toInsert = new TreeNode<T>(data);
-//     }
-//     TreeNode<T>* new_parent = nullptr;
-//     BTSearchParent(toInsert, new_parent)
-//     TreeNode<T>* tmp_root = this->getRoot();    
-//     //go all the way up nd heightCalc, balance, rotations
-    
-// }
-
-//helper function that assigns by reference into 'parent' variable,
-//the parent of a node which is to be inserted into binary tree
 template<class T>
-void AVL_Tree<T>::BTSearchParent(TreeNode<T>* toInsert, TreeNode<T>* parent)
+void AVL_Tree<T>::insert(T data, TreeNode<T>* vertex)
 {
-    TreeNode<T>* tmp_root = this->getRoot();
-    if(toInsert == tmp_root)     //case 1: we found the data we wanted to insert
+	if(data == vertex->getData())
     {
-        parent = tmp_root;
+        return;
     }
-    else if(toInsert < tmp_root) //case 2: our data is smaller than current data
+    if(data < vertex->getData())
     {
-        if(!tmp_root->getLeft())
+		if(vertex->getLeft())
         {
-            AVL_Tree<T> subTree(tmp_root->getLeft());
-            subTree.BTSearchParent(toInsert, parent);
-        }
+			insert(data, vertex->getLeft());
+		}
         else
         {
-            parent = tmp_root;
-        }        
-    }
-    else if (toInsert > tmp_root) //case 3: our data is larger than current data
-    {
-        if(!tmp_root->getRight())
-        {
-            AVL_Tree<T> subTree(tmp_root->getRight());
-            subTree.BTSearchParent(toInsert, parent);
+			vertex->setLeft(new TreeNode<T>);
+			vertex->getLeft()->setData(data);
+			vertex->getLeft()->setLeft(nullptr);
+			vertex->getLeft()->setRight(nullptr);
         }
+	}
+    else if(data > vertex->getData())
+    {
+		if(vertex->getRight())
+        {
+			insert(data, vertex->getRight());
+		}
         else
         {
-            parent = tmp_root;
-        }
-    }
+			vertex->setRight(new TreeNode<T>);
+			vertex->getRight()->setData(data);
+			vertex->getRight()->setRight(nullptr);
+			vertex->getRight()->setLeft(nullptr);
+		}
+	}
 }
+
+template<class T>
+void AVL_Tree<T>::insertNode(const T& data)
+{
+	TreeNode<T>* root = this->getRoot();
+    if(root) {insert(data, root);}
+    else
+    {
+		root = new TreeNode<T>;
+		root->setData(data);
+		root->setLeft(nullptr);
+        root->setRight(nullptr);		
+	}
+    while
+    //go all the way up and check balance
+    //ctr++
+}
+
+
 
 
 #endif //WET1_AVL_TREE_H

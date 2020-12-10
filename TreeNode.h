@@ -25,8 +25,8 @@ class TreeNode
     TreeNode* getLeft();
     TreeNode* getRight();
     TreeNode* getParent();
-    int& getHeight();
-    const T getData() const;
+    int getHeight();
+    T getData() const;
     const TreeNode* getLeft() const;
     const TreeNode* getRight() const;
     const TreeNode* getParent() const;
@@ -145,16 +145,16 @@ TreeNode<T>* TreeNode<T>::getParent()
 }
 
 template<class T>
-int& TreeNode<T>::getHeight()
+int TreeNode<T>::getHeight()
 {
     return this->height;
 }
 
-// template<class T>
-// const T* TreeNode<T>::getData() const
-// {
-//     return this->data;
-// }
+template<class T>
+T TreeNode<T>::getData() const
+{
+    return this->data;
+}
 
 template<class T>
 const TreeNode<T>* TreeNode<T>::getLeft() const
