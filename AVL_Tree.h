@@ -12,6 +12,7 @@ class AVL_Tree
     TreeNode<T>* root;
     TreeNode<T>* small;
     int size;
+    
 
 
     public:
@@ -27,6 +28,9 @@ class AVL_Tree
     TreeNode<T>* rlrotation();
     TreeNode<T>* findMin();
     TreeNode<T>* findMax();
+    TreeNode<T>* insert(T, TreeNode<T>*);
+    void BTSearchParent(TreeNode<T>* toInsert, TreeNode<T>* parent);
+
 };
 
 
@@ -51,28 +55,6 @@ template <class T>
 TreeNode<T>* AVL_Tree<T>::getRoot()
 {
     return this->root;
-}
-
-template <class T>
-TreeNode<T>* AVL_Tree<T>::findMin()
-{
-    TreeNode<T>* node = this->getRoot();
-    while(node->getLeft())
-    {        
-        node = node->getLeft();
-    }
-    return node;
-}
-
-template <class T>
-TreeNode<T>* AVL_Tree<T>::findMax()
-{
-    TreeNode<T>* node = this->getRoot();
-    while(node->getRight())
-    {        
-        node = node->getRight();
-    }
-    return node;
 }
 
 template<class T>
@@ -119,56 +101,109 @@ TreeNode<T>* AVL_Tree<T>::rlrotation()
     return new_root;
 }
 
+template <class T>
+TreeNode<T>* AVL_Tree<T>::findMin()
+{
+    TreeNode<T>* node = this->getRoot();
+    while(node->getLeft())
+    {        
+        node = node->getLeft();
+    }
+    return node;
+}
+
+template <class T>
+TreeNode<T>* AVL_Tree<T>::findMax()
+{
+    TreeNode<T>* node = this->getRoot();
+    while(node->getRight())
+    {        
+        node = node->getRight();
+    }
+    return node;
+}
+
+// template <class T>
+// TreeNode<T>* AVL_Tree<T>::insert(T data, TreeNode<T>* toInsert)
+// {
+//     if(!toInsert)
+//     {
+//         toInsert = new TreeNode<T>(data);
+//     }
+//     TreeNode<T>* new_parent = nullptr;
+//     BTSearchParent(toInsert, new_parent)
+//     TreeNode<T>* tmp_root = this->getRoot();    
+//     //go all the way up nd heightCalc, balance, rotations
+    
+// }
+
+//helper function that assigns by reference into 'parent' variable,
+//the parent of a node which is to be inserted into binary tree
+template<class T>
+void AVL_Tree<T>::BTSearchParent(TreeNode<T>* toInsert, TreeNode<T>* parent)
+{
+    TreeNode<T>* tmp_root = this->getRoot();
+    if(toInsert == tmp_root)     //case 1: we found the data we wanted to insert
+    {
+        parent = tmp_root;
+    }
+    else if(toInsert < tmp_root) //case 2: our data is smaller than current data
+    {
+        if(!tmp_root->getLeft())
+        {
+            AVL_Tree<T> subTree(tmp_root->getLeft());
+            subTree.BTSearchParent(toInsert, parent);
+        }
+        else
+        {
+            parent = tmp_root;
+        }        
+    }
+    else if (toInsert > tmp_root) //case 3: our data is larger than current data
+    {
+        if(!tmp_root->getRight())
+        {
+            AVL_Tree<T> subTree(tmp_root->getRight());
+            subTree.BTSearchParent(toInsert, parent);
+        }
+        else
+        {
+            parent = tmp_root;
+        }
+    }
+}
+
+
 #endif //WET1_AVL_TREE_H
 
-
-// template<class T>
-// AVL_Tree<T>::AVL_Tree(const TreeNode<T>* r)
-// {
-//     TreeNode<T> tmp();
-//     if(r)
+//  while(1)
 //     {
-//         root = &tmp;
-//     }    
-//     else
-//     {
-//         root = nullptr;
-//     }    
-// }
-
-// template<class T>
-// AVL_Tree<T>::~AVL_Tree()
-// {    
-    
-//     delete this->getRoot();
-//     // if(!this->getRoot()->getLeft() && !this->getRoot()->getRight())
-//     // {
-//     //     delete this->getRoot();
-//     // }
-//     // else if(!this->getRoot()->getLeft())
-//     // {
-//     //     // AVL_Tree toDelete(this->getRoot()->getRight());
-//     //     // delete &toDelete;
-//     //     delete this->getRoot()->getRight();
-//     //     delete this->getRoot();
-//     // }
-//     // else if(!this->getRoot()->getRight())
-//     // {
-//     //     // AVL_Tree toDelete(this->getRoot()->getLeft());
-//     //     // delete &toDelete;
-//     //     delete this->getRoot()->getLeft();
-//     //     delete this->getRoot();
-//     // }
-//     // else
-//     // {
-//     //     // AVL_Tree leftDelete(this->getRoot()->getLeft());
-//     //     // delete &leftDelete;
-//     //     // AVL_Tree rightDelete(this->getRoot()->getRight());
-//     //     // delete &rightDelete;
-
-//     //     delete this->getRoot()->getLeft();
-//     //     delete this->getRoot()->getRight();
-                
-//     //     delete this->getRoot();
-//     // }    
-// }
+//         if(toInsert == tmp_root)
+//         {
+//             return tmp_root;
+//         }
+//         if(toInsert < tmp_root)
+//         {
+//             if(!tmp_root->getLeft())
+//             {
+//                 toInsert->setParent(tmp_root);                
+//                 break;
+//             }
+//             else
+//             {
+//                 tmp_root = tmp_root->getLeft();
+//             }            
+//         }
+//         else if(toInsert > tmp_root)
+//         {
+//             if(!tmp_root->getRight())
+//             {
+//                 toInsert->setParent(tmp_root);                
+//                 break;
+//             }
+//             else
+//             {
+//                 tmp_root = tmp_root->getRight();
+//             }
+//         }
+//     }
