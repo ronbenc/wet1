@@ -100,7 +100,6 @@ TreeNode<T>::~TreeNode()
     }    
 }
 
-
 template<class T>
 void TreeNode<T>::heightCalc()
 {
@@ -116,10 +115,15 @@ void TreeNode<T>::heightCalc()
 template<class T>
 int TreeNode<T>::getBF()
 {
-    return (this->getLeft()->getHeight() - this->getLeft()->getHeight());
+    if(!this) {return 0;}
+    int l_height = 0;
+    int r_height = 0;
+    if(!this->getLeft()) {l_height = -1;}
+    else {l_height = this->getLeft()->getHeight();}
+    if(!this->getRight()) {r_height = -1;}
+    else {r_height = this->getRight()->getHeight();}
+    return (l_height - r_height);
 }
-
-
 
 template<class T>
 T TreeNode<T>::getData()
@@ -183,12 +187,14 @@ const int& TreeNode<T>::getHeight() const
 template<class T>
 void TreeNode<T>::setData(const T& data)
 {
+    //throw exception
     this->data = data;
 }
 
 template<class T>
 void TreeNode<T>::setLeft(TreeNode<T>* input)
 {
+    //throw exception
     this->l = input;
     if(input)
     {
@@ -200,6 +206,7 @@ void TreeNode<T>::setLeft(TreeNode<T>* input)
 template<class T>
 void TreeNode<T>::setRight(TreeNode<T>* input)
 {
+    //throw exception
     this->r = input;
     if(input)
     {
@@ -211,53 +218,16 @@ void TreeNode<T>::setRight(TreeNode<T>* input)
 template<class T>
 void TreeNode<T>::setParent(TreeNode<T>* input)
 {
+    //throw exception
     this->p = input;
 }
 
 template<class T>
 void TreeNode<T>::setHeight(const int& input)
 {
+    //throw exception
     this->height = input;
 }
-
-// template<class T>
-// TreeNode<T>* TreeNode<T>::nodeSearch(T data) const
-// {
-//     if(!this)
-//     {
-//         return nullptr;
-//     }
-//     assert (this->getData);
-//     if(*this->getData == data)
-//     {
-//         return this;
-//     }
-//     if(data < *this->getData())
-//     {
-//         return this->getLeft()->nodeSearch(data);
-//     }
-//     else
-//     {
-//         return this->getRight()->nodeSearch(data);
-//     }
-// }
-
-// template<class T>
-// void TreeNode<T>::nodeSearch(TreeNode<T>* &curr, T data, TreeNode<T>* &parent)
-// {
-//     while (curr != nullptr && curr->data != data)
-//     {
-//         parent = curr;    
-//         if (data < curr->data)
-//         {
-//             curr = curr->left;
-//         }            
-//         else
-//         {
-//             curr = curr->right;
-//         }            
-//     }
-// }
 
 //******************************non-member functions' implementations**************************
 
@@ -300,6 +270,7 @@ bool operator<= (const TreeNode<T>& a, const TreeNode<T>& b)
 template<class T>
 void treePrint(std::ostream& os, const TreeNode<T>& root, int depth)
 {
+    if(!root) {return;}
     for(int i = 0 ; i < 128/(depth + 2) ; i++)
     {
         os << " ";
@@ -312,7 +283,6 @@ void treePrint(std::ostream& os, const TreeNode<T>& root, int depth)
 
 }
 
-//from internet - itay
 template<class T>
 void TreeNode<T>::print2DUtil(TreeNode<T> *root, int space)
 {  
