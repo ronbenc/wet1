@@ -37,8 +37,8 @@ class TreeNode
     void setParent(TreeNode<T>*);
     void setHeight(const int&);
     
-    static void print2DUtil(TreeNode<T> *root, int space);
-    static void print2D(TreeNode<T> *root);
+    static void print2DUtil(std::ostream& os, TreeNode<T> *root, int space);
+    static void print2D(std::ostream& os, TreeNode<T> *root);
     // TreeNode<T>* nodeSearch(T data) const;
 
     // static void searchKey(TreeNode<T>* &curr, T data, TreeNode* &parent);
@@ -284,27 +284,27 @@ void treePrint(std::ostream& os, const TreeNode<T>& root, int depth)
 }
 
 template<class T>
-void TreeNode<T>::print2DUtil(TreeNode<T> *root, int space)
+void TreeNode<T>::print2DUtil(std::ostream& os, TreeNode<T> *root, int space)
 {  
     if (!root) 
     {
         return;
     }
     space += 10;  
-    print2DUtil(root->r, space);      
-    std::cout << std::endl;  
+    print2DUtil(os, root->r, space);      
+    os << std::endl;  
     for (int i = 10; i < space; i++) 
     {
-        std::cout << " ";  
+        os << " ";  
     }
-    std::cout << root->getData() <<"\n";    
-    print2DUtil(root->l, space);
+    os << root->getData() <<"\n";    
+    print2DUtil(os, root->l, space);
 }  
   
 template<class T>
-void TreeNode<T>::print2D(TreeNode<T> *root)  
+void TreeNode<T>::print2D(std::ostream& os, TreeNode<T> *root)
 {  
-    print2DUtil(root, 0);  
+    print2DUtil(os, root, 0);  
 }  
 
 

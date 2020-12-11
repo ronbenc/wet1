@@ -31,9 +31,16 @@ class AVL_Tree
     static bool parentSideCheck(TreeNode<T>* node);
     void insertNode(T data);
     TreeNode<T>* searchNode(T data);
+    
 
 };
 
+template<class T>
+std::ostream& operator<<(std::ostream& os, AVL_Tree<T>* tree)
+{
+    TreeNode<int>::print2D(os, tree->getRoot());
+    return os;
+}
 
 template<class T>
 AVL_Tree<T>::AVL_Tree(TreeNode<T>* r)
