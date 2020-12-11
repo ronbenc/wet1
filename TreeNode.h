@@ -3,12 +3,13 @@
 
 #include <algorithm>
 #include <iostream>
+#include <cassert>
 
 template<class T>
 class TreeNode
 {
     private:
-    T* data;
+    T data;
     TreeNode<T>* l;
     TreeNode<T>* r;
     TreeNode<T>* p;
@@ -16,34 +17,29 @@ class TreeNode
 
     public:
 
-    // TreeNode() = delete;
-    explicit TreeNode(T = T(), TreeNode<T>* left = nullptr, TreeNode<T>* right = nullptr, TreeNode<T>* parent = nullptr);//checked
-    TreeNode(const TreeNode<T>& toCopy) : data(toCopy.data), l(toCopy.l), r(toCopy.r), p(toCopy.p), height(toCopy.height) {};//checked
-    ~TreeNode();//checked - now changed, should check another time
-    
-    // TreeNode& operator= (const TreeNode&);
-    void heightCalc();//checked    
+    explicit TreeNode(T = T(), TreeNode<T>* left = nullptr, TreeNode<T>* right = nullptr, TreeNode<T>* parent = nullptr);
+    ~TreeNode();
+    void heightCalc();
     int getBF();
     T getData();
     TreeNode* getLeft();
     TreeNode* getRight();
-    TreeNode* getParent();//checked
-    int& getHeight();
-
-    const T getData() const;//checked
-    const TreeNode* getLeft() const;//checked
-    const TreeNode* getRight() const;//checked
-    const TreeNode* getParent() const;//checked
-    const int& getHeight() const;//checked
-
-    void setData(const T&);//checked
-    void setLeft(TreeNode<T>*);//checked
-    void setRight(TreeNode<T>*);//checked
-    void setParent(TreeNode<T>*);//checked
-    void setHeight(const int&);//checked - might not be necessary??
+    TreeNode* getParent();
+    int getHeight();
+    T getData() const;
+    const TreeNode* getLeft() const;
+    const TreeNode* getRight() const;
+    const TreeNode* getParent() const;
+    const int& getHeight() const;
+    void setData(const T&);
+    void setLeft(TreeNode<T>*);
+    void setRight(TreeNode<T>*);
+    void setParent(TreeNode<T>*);
+    void setHeight(const int&);
     
     static void print2DUtil(TreeNode<T> *root, int space);
     static void print2D(TreeNode<T> *root);
+    // TreeNode<T>* nodeSearch(T data) const;
 
     // static void searchKey(TreeNode<T>* &curr, T data, TreeNode* &parent);
     
@@ -53,22 +49,22 @@ class TreeNode
 //**********************non-class functions' and operators' declarations********************
 
 template<class T>
-bool operator== (const TreeNode<T>&, const TreeNode<T>&);//checked
+bool operator== (const TreeNode<T>&, const TreeNode<T>&);
 
 template<class T>
-bool operator!= (const TreeNode<T>&, const TreeNode<T>&);//checked
+bool operator!= (const TreeNode<T>&, const TreeNode<T>&);
 
 template<class T>
-bool operator< (const TreeNode<T>&, const TreeNode<T>&);//checked
+bool operator< (const TreeNode<T>&, const TreeNode<T>&);
 
 template<class T>
-bool operator> (const TreeNode<T>&, const TreeNode<T>&);//checked
+bool operator> (const TreeNode<T>&, const TreeNode<T>&);
 
 template<class T>
-bool operator>= (const TreeNode<T>&, const TreeNode<T>&);//checked
+bool operator>= (const TreeNode<T>&, const TreeNode<T>&);
 
 template<class T>
-bool operator<= (const TreeNode<T>&, const TreeNode<T>&);//checked
+bool operator<= (const TreeNode<T>&, const TreeNode<T>&);
 
 template<class T>
 std::ostream& operator<<(std::ostream&, const TreeNode<T>&);//checked, might change
@@ -80,8 +76,7 @@ std::ostream& operator<<(std::ostream&, const TreeNode<T>&);//checked, might cha
 template<class T>
 TreeNode<T>::TreeNode(T input, TreeNode<T>* left, TreeNode<T>* right, TreeNode<T>* parent)
 {
-    T* tmp_data = new T(input);
-    data = tmp_data;
+    data = input;
     l = left;
     r = right;
     p = parent;
@@ -102,60 +97,38 @@ TreeNode<T>::~TreeNode()
         {
             parent->setRight(nullptr);
         }
-    }
-    if(!this->getLeft() && !this->getRight())
-    {
-        delete this->data;
-    }
-    else if(!this->getLeft())
-    {
-        delete this->getRight();
-        delete this->data;
-    }
-    else if(!this->getRight())
-    {
-        delete this->getLeft();
-        delete this->data;
-    }
-    else
-    {
-        delete this->getLeft();
-        delete this->getRight();
-        delete this->data;
-    }
+    }    
 }
-
 
 template<class T>
 void TreeNode<T>::heightCalc()
 {
-    if (!this->getLeft() && !this->getRight()) {this->setHeight(0);}
-    else if (!this->getLeft())
-    {
-        this->setHeight((this->getRight())->getHeight() + 1);
-    }
-    else if (!this->getRight())
-    {
-        this->setHeight((this->getLeft())->getHeight() + 1);
-    }
+    if(!this) {this->setHeight(-1);}
     else
     {
-        this->setHeight(std::max((this->getLeft())->getHeight(), (this->getRight())->getHeight()) + 1);
+        int l_height = (this->getLeft() ? this->getLeft()->height : -1);
+        int r_height = (this->getRight() ? this->getRight()->height : -1);
+        this->setHeight(std::max(l_height, r_height) + 1);
     }
 }
 
 template<class T>
 int TreeNode<T>::getBF()
 {
-    return (this->getLeft()->getHeight() - this->getLeft()->getHeight());
+    if(!this) {return 0;}
+    int l_height = 0;
+    int r_height = 0;
+    if(!this->getLeft()) {l_height = -1;}
+    else {l_height = this->getLeft()->getHeight();}
+    if(!this->getRight()) {r_height = -1;}
+    else {r_height = this->getRight()->getHeight();}
+    return (l_height - r_height);
 }
-
-
 
 template<class T>
 T TreeNode<T>::getData()
 {
-    return *this->data;
+    return this->data;
 }
 template<class T>
 TreeNode<T>* TreeNode<T>::getLeft()
@@ -176,15 +149,15 @@ TreeNode<T>* TreeNode<T>::getParent()
 }
 
 template<class T>
-int& TreeNode<T>::getHeight()
+int TreeNode<T>::getHeight()
 {
     return this->height;
 }
 
 template<class T>
-const T TreeNode<T>::getData() const
+T TreeNode<T>::getData() const
 {
-    return *this->data;
+    return this->data;
 }
 
 template<class T>
@@ -214,12 +187,14 @@ const int& TreeNode<T>::getHeight() const
 template<class T>
 void TreeNode<T>::setData(const T& data)
 {
+    //throw exception
     this->data = data;
 }
 
 template<class T>
 void TreeNode<T>::setLeft(TreeNode<T>* input)
 {
+    //throw exception
     this->l = input;
     if(input)
     {
@@ -231,6 +206,7 @@ void TreeNode<T>::setLeft(TreeNode<T>* input)
 template<class T>
 void TreeNode<T>::setRight(TreeNode<T>* input)
 {
+    //throw exception
     this->r = input;
     if(input)
     {
@@ -242,31 +218,16 @@ void TreeNode<T>::setRight(TreeNode<T>* input)
 template<class T>
 void TreeNode<T>::setParent(TreeNode<T>* input)
 {
+    //throw exception
     this->p = input;
 }
 
 template<class T>
 void TreeNode<T>::setHeight(const int& input)
 {
+    //throw exception
     this->height = input;
 }
-
-// template<class T>
-// void TreeNode<T>::searchKey(TreeNode<T>* &curr, T data, TreeNode<T>* &parent)
-// {
-//     while (curr != nullptr && curr->data != data)
-//     {
-//         parent = curr;    
-//         if (data < curr->data)
-//         {
-//             curr = curr->left;
-//         }            
-//         else
-//         {
-//             curr = curr->right;
-//         }            
-//     }
-// }
 
 //******************************non-member functions' implementations**************************
 
@@ -309,6 +270,7 @@ bool operator<= (const TreeNode<T>& a, const TreeNode<T>& b)
 template<class T>
 void treePrint(std::ostream& os, const TreeNode<T>& root, int depth)
 {
+    if(!root) {return;}
     for(int i = 0 ; i < 128/(depth + 2) ; i++)
     {
         os << " ";
@@ -321,7 +283,6 @@ void treePrint(std::ostream& os, const TreeNode<T>& root, int depth)
 
 }
 
-//from internet - itay
 template<class T>
 void TreeNode<T>::print2DUtil(TreeNode<T> *root, int space)
 {  
@@ -345,39 +306,6 @@ void TreeNode<T>::print2D(TreeNode<T> *root)
 {  
     print2DUtil(root, 0);  
 }  
-
-
-// template<class T>
-// std::ostream& operator<<(std::ostream& os, const TreeNode<T>& root)
-// {
-//     int depth = 0;
-//     treePrint(os, root, depth);
-
-    
-
-//     // os << "node value is: " << treeNode.getData() << std::endl;
-//     // if(treeNode.getLeft())
-//     // {
-//     //     os << "left node value is: " << (*treeNode.getLeft()).getData() << std::endl;
-//     // }    
-//     // if(treeNode.getRight())
-//     // {
-//     //     os << "right node value is: " << (*treeNode.getRight()).getData() << std::endl;
-//     // }
-//     // os << "height: " << treeNode.getHeight() << std::endl;
-//     // return os;
-// }
-
-
-// template<class T>
-// TreeNode<T>& TreeNode<T>::operator=(const TreeNode& toCopy)
-// {
-//     this->data = toCopy.getData();
-//     this->l = toCopy.getLeft();
-//     this->r = toCopy.getRight();
-//     this->height = toCopy.getHeight();
-//     return this;
-// }
 
 
 #endif //TREENODE_H
