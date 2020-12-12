@@ -31,27 +31,23 @@ class AVL_Tree
     int size;
 
     void singleBalanceCheck(TreeNode<T>* leaf);
-
-    public:    
-    // explicit AVL_Tree(TreeNode<T>* r = nullptr);
-    AVL_Tree(TreeNode<T>* r = nullptr);
-    ~AVL_Tree();    
-    TreeNode<T>* getRoot();
-
-    //should be private
-    static TreeNode<T>* llrotation(TreeNode<T>* vertex);
-    static TreeNode<T>* rrrotation(TreeNode<T>* vertex);
-    static TreeNode<T>* lrrotation(TreeNode<T>* vertex);
-    static TreeNode<T>* rlrotation(TreeNode<T>* vertex);
-    TreeNode<T>* findMin();
-    TreeNode<T>* findMax();    
+    TreeNode<T>* llrotation(TreeNode<T>* vertex);
+    TreeNode<T>* rrrotation(TreeNode<T>* vertex);
+    TreeNode<T>* lrrotation(TreeNode<T>* vertex);
+    TreeNode<T>* rlrotation(TreeNode<T>* vertex);
     void insert(T data, TreeNode<T>* = nullptr);
-    static bool parentSideCheck(TreeNode<T>* node);
-    void heightUpdate(TreeNode<T>* node);
-    void insertNode(T data);
+    static void heightUpdate(TreeNode<T>* node);
     TreeNode<T>* searchNode(T data);
     
 
+    public:    
+    AVL_Tree(TreeNode<T>* r = nullptr);
+    ~AVL_Tree();    
+    TreeNode<T>* getRoot();
+    TreeNode<T>* findMin();
+    TreeNode<T>* findMax();    
+    void insertNode(T data);
+    void removeNode(T data);
 };
 
 template<class T>
@@ -99,90 +95,84 @@ TreeNode<T>* AVL_Tree<T>::llrotation(TreeNode<T>* vertex)
 {
     TreeNode<T>* new_root = vertex->getLeft();
     TreeNode<T>* prev_root = vertex;
+    TreeNode<T>* prev_parent = vertex->getParent();
     prev_root->setLeft(new_root->getRight());
     new_root->setRight(prev_root);
+    if(prev_parent)
+    {
+        prev_parent->setLeft(new_root);
+    }
+    else
+    {
+        this->root = new_root;
+        new_root->setParent(nullptr);
+    }    
     return new_root;
 }
-
-// template<class T>
-// TreeNode<T>* AVL_Tree<T>::llrotation(TreeNode<T>* vertex)
-// {
-//     TreeNode<T>* new_root = this->getRoot()->getLeft();
-//     TreeNode<T>* prev_root = this->getRoot();
-//     prev_root->setLeft(new_root->getRight());
-//     new_root->setRight(prev_root);
-//     return new_root;
-// }
 
 template <class T>
 TreeNode<T>* AVL_Tree<T>::rrrotation(TreeNode<T>* vertex)
 {
     TreeNode<T>* new_root = vertex->getRight();
     TreeNode<T>* prev_root = vertex;
+    TreeNode<T>* prev_parent = vertex->getParent();
     prev_root->setRight(new_root->getLeft());
     new_root->setLeft(prev_root);
+    if(prev_parent)
+    {
+        prev_parent->setRight(new_root);
+    }
+    else
+    {
+        this->root = new_root;
+        new_root->setParent(nullptr);
+    }
     return new_root;
 }
-
-// template <class T>
-// TreeNode<T>* AVL_Tree<T>::rrrotation()
-// {
-//     TreeNode<T>* new_root = this->getRoot()->getRight();
-//     TreeNode<T>* prev_root = this->getRoot();
-//     prev_root->setRight(new_root->getLeft());
-//     new_root->setLeft(prev_root);
-//     return new_root;
-// }
-
 
 template<class T>
 TreeNode<T>* AVL_Tree<T>:: lrrotation(TreeNode<T>* vertex)
 {
     TreeNode<T>* new_root = vertex->getLeft()->getRight();
     TreeNode<T>* prev_root = vertex;
+    TreeNode<T>* prev_parent = vertex->getParent();
     prev_root->getLeft()->setRight(new_root->getLeft());
     new_root->setLeft(prev_root->getLeft());
     prev_root->setLeft(new_root->getRight());
     new_root->setRight(prev_root);
+    if(prev_parent)
+    {
+        prev_parent->setLeft(new_root);
+    }
+    else
+    {
+        this->root = new_root;
+        new_root->setParent(nullptr);
+    }
     return new_root;
 }
-
-// template<class T>
-// TreeNode<T>* AVL_Tree<T>:: lrrotation()
-// {
-//     TreeNode<T>* new_root = this->getRoot()->getLeft()->getRight();
-//     TreeNode<T>* prev_root = this->getRoot();
-//     prev_root->getLeft()->setRight(new_root->getLeft());
-//     new_root->setLeft(prev_root->getLeft());
-//     prev_root->setLeft(new_root->getRight());
-//     new_root->setRight(prev_root);
-//     return new_root;
-// }
 
 template<class T>
 TreeNode<T>* AVL_Tree<T>::rlrotation(TreeNode<T>* vertex)
 {
     TreeNode<T>* new_root = vertex->getRight()->getLeft();
     TreeNode<T>* prev_root = vertex;
+    TreeNode<T>* prev_parent = vertex->getParent();
     prev_root->getRight()->setLeft(new_root->getRight());
     new_root->setRight(prev_root->getRight());
     prev_root->setRight(new_root->getLeft());
     new_root->setLeft(prev_root);
+    if(prev_parent)
+    {
+        prev_parent->setRight(new_root);
+    }
+    else
+    {
+        this->root = new_root;
+        new_root->setParent(nullptr);
+    }
     return new_root;
 }
-
-
-// template<class T>
-// TreeNode<T>* AVL_Tree<T>::rlrotation()
-// {
-//     TreeNode<T>* new_root = this->getRoot()->getRight()->getLeft();
-//     TreeNode<T>* prev_root = this->getRoot();
-//     prev_root->getRight()->setLeft(new_root->getRight());
-//     new_root->setRight(prev_root->getRight());
-//     prev_root->setRight(new_root->getLeft());
-//     new_root->setLeft(prev_root);
-//     return new_root;
-// }
 
 template <class T>
 TreeNode<T>* AVL_Tree<T>::findMin()
@@ -265,76 +255,36 @@ void AVL_Tree<T>::singleBalanceCheck(TreeNode<T>* leaf)
     bool is_rotated = false;
     while(vertex)
     {
+        parent = vertex->getParent();
         if(vertex->getBF() == 2)
         {
             if(vertex->getLeft()->getBF() >= 0)
             {
-                parent = vertex->getParent();
-                parent->setLeft(llrotation(vertex));
-                is_rotated = true;
+                TreeNode<T>* rot_result = this->llrotation(vertex);
+                break;//single rotation
             }
             else if(vertex->getLeft()->getBF() == -1)
             {
-                parent = vertex->getParent();
-                new_root = lrrotation(vertex);
-                is_rotated = true;
+                new_root = this->lrrotation(vertex);
+                break;//single rotation
             }
         }
         else if(vertex->getBF() == -2)
         {
             if(vertex->getRight()->getBF() <= 0)
             {
-                parent = vertex->getParent();
-                if(parent)
-                {
-                    parent->setRight(rrrotation(vertex));
-                }
-                is_rotated = true;
+                TreeNode<T>* rot_result = this->rrrotation(vertex);
+                break;//single rotation
             }
             else if(vertex->getRight()->getBF() == 1)
             {
-                parent = vertex->getParent();
-                new_root = rlrotation(vertex);
-                is_rotated = true;
+                new_root = this->rlrotation(vertex);
+                break;//single rotation
             }
         }
-        if(is_rotated)
-        {
-            if(!parent)
-            {
-                new_root->setParent(nullptr);                
-            }
-            else
-            {
-                if(parentSideCheck(vertex))//vertex is a left son
-                {
-                    parent->setLeft(new_root);
-                    break;//single rotation
-                }
-                else                        //vertex is a right son
-                {
-                    parent->setRight(new_root);
-                    break;//single rotation
-                }
-            }
-            this->root = new_root;
-        }        
+        this->heightUpdate(leaf);
         vertex = vertex->getParent();
-    }
-    return;
-}
-
-//helper function that returns true if node is left son, false if right son
-template <class T>
-bool AVL_Tree<T>::parentSideCheck(TreeNode<T>* node)
-{
-    TreeNode<T>* parent = node->getParent();
-    if(parent->getLeft() == node)
-    {
-        return true;
-    }
-    assert(parent->getRight() == node);
-    return false;
+    }    
 }
 
 template <class T>
@@ -344,11 +294,7 @@ void AVL_Tree<T>::heightUpdate(TreeNode<T>* node)
     while(tmp)
     {
         tmp->heightCalc();
-        tmp = tmp->getParent();
-        if(tmp == this->getRoot())
-        {
-            break;
-        }
+        tmp = tmp->getParent();        
     }
 }
 
@@ -373,8 +319,5 @@ TreeNode<T>* AVL_Tree<T>::searchNode(T data)
     }
     return nullptr; //not found in tree
 }
-
-
-
 
 #endif //WET1_AVL_TREE_H
