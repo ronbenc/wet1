@@ -26,12 +26,9 @@
 //     tree.insertNode(0);
 //     tree.insertNode(1);
 //     tree.insertNode(2);
-//     tree.insertNode(-1);
-//     tree.insertNode(-2);
 //     std::cout << tree;
 //     return 0;
 // }
-
 
 #ifndef WET1_AVL_TREE_H
 #define WET1_AVL_TREE_H
@@ -56,23 +53,23 @@ class AVL_Tree
     void insert(T data, TreeNode<T>* = nullptr);
     static void heightUpdate(TreeNode<T>* node);
     TreeNode<T>* searchNode(T data);
-    
+    TreeNode<T>* findMin();
+    TreeNode<T>* findMax();   
+    TreeNode<T>* getRoot();    
 
     public:    
     AVL_Tree(TreeNode<T>* r = nullptr);
     ~AVL_Tree();    
-    TreeNode<T>* getRoot();
-    TreeNode<T>* getRoot() const;
-    TreeNode<T>* findMin();
-    TreeNode<T>* findMax();    
     void insertNode(T data);
     void removeNode(T data);
+    TreeNode<T>* getRoot() const;
+    // friend std::ostream& operator<< (std::ostream& os, const AVL_Tree<T>& tree);
 };
 
 template<class T>
-std::ostream& operator<<(std::ostream& os, const AVL_Tree<T>& tree)
+std::ostream& operator<< (std::ostream& os, const AVL_Tree<T>& tree)
 {
-    TreeNode<int>::print2D(os, (&tree)->getRoot());
+    TreeNode<T>::print2D(os, (&tree)->getRoot());
     return os;
 }
 
