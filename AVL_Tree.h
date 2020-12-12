@@ -16,7 +16,21 @@
 // void removeNode (T data);
 
 //Print to os a given AVL Tree, supports concatenations
-// std::ostream& operator<<(std::ostream& os, const AVL_Tree<T>* tree);
+// std::ostream& operator<<(std::ostream& os, const AVL_Tree<T>& tree);
+
+// An example of using the data structure:
+
+// int main()
+// {    
+//     AVL_Tree<int> tree = AVL_Tree<int>();
+//     tree.insertNode(0);
+//     tree.insertNode(1);
+//     tree.insertNode(2);
+//     tree.insertNode(-1);
+//     tree.insertNode(-2);
+//     std::cout << tree;
+//     return 0;
+// }
 
 
 #ifndef WET1_AVL_TREE_H
