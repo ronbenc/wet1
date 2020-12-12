@@ -4,10 +4,12 @@
 #include <set>
 #include <map>
 
+typedef std::set<std::pair<int, int>> ClassTree;
+
 class CourseData
 {
 public:
-    std::set<std::pair<int, int>>** classes_array; //an array of pointers
+    ClassTree** classes_array; //an array of pointers
     const unsigned int num_of_classes;
     int sum;
     

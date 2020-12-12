@@ -7,7 +7,7 @@
 
 class Avoided
 {
-public:
+public: //change to private when done
     unsigned int* avoided_fwd;
     unsigned int* avoided_bwd;
     unsigned start;

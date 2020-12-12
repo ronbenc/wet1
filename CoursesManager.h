@@ -4,13 +4,12 @@
 #include "CourseData.h"
 
 
-
-
+typedef std::set<std::pair<int, int>> ClassTree;
 
 class CoursesManager
 {
 private:
-    std::map<int, std::set<std::pair<int, int>>* > most_viewed;
+    std::map<int, ClassTree* > most_viewed;
     std::map<int, CourseData> course_tree;
 
 public:
