@@ -1,6 +1,7 @@
-//              Generic AVL Tree:
+//**************Generic AVL Tree:******************
+
 // The data structure is an implementation of a genereic
-// AVL Tree, which offers the follwing operations:
+// AVL Tree, which supports the follwing operations:
 
 // Constructor of an AVL Tree, returns the tree by value, default root is null
 //     AVL_Tree(TreeNode<T>* r = nullptr);
@@ -13,6 +14,9 @@
 
 //Remove given data from the tree
 // void removeNode (T data);
+
+//Print to os a given AVL Tree, supports concatenations
+// std::ostream& operator<<(std::ostream& os, const AVL_Tree<T>* tree);
 
 
 #ifndef WET1_AVL_TREE_H
@@ -44,6 +48,7 @@ class AVL_Tree
     AVL_Tree(TreeNode<T>* r = nullptr);
     ~AVL_Tree();    
     TreeNode<T>* getRoot();
+    TreeNode<T>* getRoot() const;
     TreeNode<T>* findMin();
     TreeNode<T>* findMax();    
     void insertNode(T data);
@@ -51,9 +56,9 @@ class AVL_Tree
 };
 
 template<class T>
-std::ostream& operator<<(std::ostream& os, AVL_Tree<T>* tree)
+std::ostream& operator<<(std::ostream& os, const AVL_Tree<T>& tree)
 {
-    TreeNode<int>::print2D(os, tree->getRoot());
+    TreeNode<int>::print2D(os, (&tree)->getRoot());
     return os;
 }
 
@@ -89,6 +94,11 @@ TreeNode<T>* AVL_Tree<T>::getRoot()
     return this->root;
 }
 
+template <class T>
+TreeNode<T>* AVL_Tree<T>::getRoot() const
+{
+    return this->root;
+}
 
 template<class T>
 TreeNode<T>* AVL_Tree<T>::llrotation(TreeNode<T>* vertex)
