@@ -1,3 +1,20 @@
+//              Generic AVL Tree:
+// The data structure is an implementation of a genereic
+// AVL Tree, which offers the follwing operations:
+
+// Constructor of an AVL Tree, returns the tree by value, default root is null
+//     AVL_Tree(TreeNode<T>* r = nullptr);
+
+// Constructor of an AVL Tree, destroys the tree recursively
+//     ~AVL_Tree();    
+
+//Insert given data to the tree
+// void insertNode(T data);
+
+//Remove given data from the tree
+// void removeNode (T data);
+
+
 #ifndef WET1_AVL_TREE_H
 #define WET1_AVL_TREE_H
 
@@ -16,7 +33,8 @@ class AVL_Tree
     void singleBalanceCheck(TreeNode<T>* leaf);
 
     public:    
-    explicit AVL_Tree(TreeNode<T>* r = nullptr);
+    // explicit AVL_Tree(TreeNode<T>* r = nullptr);
+    AVL_Tree(TreeNode<T>* r = nullptr);
     ~AVL_Tree();    
     TreeNode<T>* getRoot();
 
@@ -29,6 +47,7 @@ class AVL_Tree
     TreeNode<T>* findMax();    
     void insert(T data, TreeNode<T>* = nullptr);
     static bool parentSideCheck(TreeNode<T>* node);
+    void heightUpdate(TreeNode<T>* node);
     void insertNode(T data);
     TreeNode<T>* searchNode(T data);
     
@@ -47,7 +66,6 @@ AVL_Tree<T>::AVL_Tree(TreeNode<T>* r)
 {
     if(!r) 
     {
-        // root = new TreeNode<T>();
         root = nullptr;
         min = nullptr;
         size = 0;        
@@ -204,9 +222,6 @@ void AVL_Tree<T>::insert(T data, TreeNode<T>* vertex)
         else
         {
 			vertex->setLeft(new TreeNode<T>(data));
-			// vertex->getLeft()->setData(data);
-			// vertex->getLeft()->setLeft(nullptr);
-			// vertex->getLeft()->setRight(nullptr);
             this->min = vertex;
         }
 	}
@@ -218,10 +233,7 @@ void AVL_Tree<T>::insert(T data, TreeNode<T>* vertex)
 		}
         else
         {
-			vertex->setRight(new TreeNode<T>);
-			vertex->getRight()->setData(data);
-			vertex->getRight()->setRight(nullptr);
-			vertex->getRight()->setLeft(nullptr);
+			vertex->setRight(new TreeNode<T>(data));
 		}
 	}
 }
@@ -236,10 +248,6 @@ void AVL_Tree<T>::insertNode(T data)
     else
     {
 		this->root = new TreeNode<T>(data);
-		// this->root->setData(data);
-		// this->root->setLeft(nullptr);
-        // this->root->setRight(nullptr);
-        // this->root->setParent(nullptr);
         this->min = root;
     }
     this->size++;
@@ -262,7 +270,7 @@ void AVL_Tree<T>::singleBalanceCheck(TreeNode<T>* leaf)
             if(vertex->getLeft()->getBF() >= 0)
             {
                 parent = vertex->getParent();
-                new_root = llrotation(vertex);
+                parent->setLeft(llrotation(vertex));
                 is_rotated = true;
             }
             else if(vertex->getLeft()->getBF() == -1)
@@ -277,7 +285,10 @@ void AVL_Tree<T>::singleBalanceCheck(TreeNode<T>* leaf)
             if(vertex->getRight()->getBF() <= 0)
             {
                 parent = vertex->getParent();
-                new_root = rrrotation(vertex);
+                if(parent)
+                {
+                    parent->setRight(rrrotation(vertex));
+                }
                 is_rotated = true;
             }
             else if(vertex->getRight()->getBF() == 1)
@@ -324,6 +335,21 @@ bool AVL_Tree<T>::parentSideCheck(TreeNode<T>* node)
     }
     assert(parent->getRight() == node);
     return false;
+}
+
+template <class T>
+void AVL_Tree<T>::heightUpdate(TreeNode<T>* node)
+{
+    TreeNode<T>* tmp = node;
+    while(tmp)
+    {
+        tmp->heightCalc();
+        tmp = tmp->getParent();
+        if(tmp == this->getRoot())
+        {
+            break;
+        }
+    }
 }
 
 template <class T>
