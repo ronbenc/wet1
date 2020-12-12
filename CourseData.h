@@ -7,12 +7,10 @@
 class CourseData
 {
 public:
-    std::map<int, std::set<std::pair<int, int>>* >** classes_array;
-    //std::set<std::pair<int, int>>** classes_array; //an array of pointers
+    std::set<std::pair<int, int>>** classes_array; //an array of pointers
     const unsigned int num_of_classes;
     int sum;
-    //maybe "avoided" arrays
-
+    
     CourseData(const unsigned int num_of_classes);
     ~CourseData();
 
