@@ -62,8 +62,7 @@ class AVL_Tree
     ~AVL_Tree();    
     void insertNode(T data);
     void removeNode(T data);
-    TreeNode<T>* getRoot() const;
-    // friend std::ostream& operator<< (std::ostream& os, const AVL_Tree<T>& tree);
+    TreeNode<T>* getRoot() const;    
 };
 
 template<class T>
@@ -233,7 +232,7 @@ void AVL_Tree<T>::insert(T data, TreeNode<T>* vertex)
         else
         {
 			vertex->setLeft(new TreeNode<T>(data));
-            this->min = vertex;
+            // this->min = vertex;
         }
 	}
     else if(data > vertex->getData())
@@ -255,6 +254,12 @@ void AVL_Tree<T>::insertNode(T data)
     if(root) 
     {
         this->insert(data, root);
+        TreeNode<T>* curr = this->searchNode(data);
+        if((*curr) < (*this->min))
+        {
+            min = this->searchNode(data);
+            assert (min);
+        }
     }
     else
     {
