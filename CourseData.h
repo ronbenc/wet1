@@ -1,6 +1,7 @@
 #ifndef WET1_COURSE_DATA_H
 #define WET1_COURSE_DATA_H
 
+#include "Avoided.h"
 #include <set>
 #include <map>
 
@@ -11,6 +12,7 @@ class CourseData
 public:
     ClassTree** classes_array; //an array of pointers
     const unsigned int num_of_classes;
+    Avoided zero_viewing_time;
     int sum;
     
     CourseData(const unsigned int num_of_classes);
