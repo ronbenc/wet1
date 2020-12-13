@@ -19,7 +19,7 @@ void CoursesManager::RemoveCourse(const int courseID)
       {
         List_Map<int, ClassesTree>::iterator curr_time_it = to_remove.classes_array[classID];
         curr_time_it->value.erase(std::pair<int, int>(courseID, classID));
-        
+
         if(curr_time_it->value.empty())
         {
           most_viewed.erase(curr_time_it);
@@ -52,12 +52,27 @@ void CoursesManager::WatchClass(const int courseID, const int classID, int time)
     int prev_time = curr_time_it->key;
     time += prev_time;
     most_viewed[time].insert(std::pair<int const, int const>(courseID, classID));
-    course_map[courseID].classes_array[classID] = most_viewed.find_position(courseID); //optimize using hints! avoid double search
+    course_map[courseID].classes_array[classID] = most_viewed.find_position(time); //optimize using hints! avoid double search
     if(curr_time_it->value.empty())
     {
       most_viewed.erase(curr_time_it);
     }
   }
+}
+
+int CoursesManager::TimeViewed(const int courseID, const int classID)
+{
+  List_Map<int, ClassesTree>::iterator time_it = course_map[courseID].classes_array[classID];
+  if(time_it == most_viewed.end())
+  {
+    return 0;
+  }
+  else
+  {
+    assert(time_it->key);
+    return time_it->key;
+  }
+  
 }
 
 void CoursesManager::PrintMostViewed()
