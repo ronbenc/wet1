@@ -13,11 +13,11 @@ public:
     ClassesTree** classes_array; //an array of pointers
     const int num_of_classes;
     Avoided zero_viewing_time;
-    int viewing_time_sum;
 
-    CourseData(const int& num_of_classes);
+    CourseData(const int& num_of_classes = 0);
     CourseData(const CourseData& to_copy);
     ~CourseData();
+    //CourseData& operator= (const CourseData& to_copy);
 
     void WatchClass(int classID, int time);
     int TimeViewed(int classID) const;

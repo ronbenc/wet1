@@ -1,6 +1,6 @@
 #include "CourseData.h"
 
-CourseData::CourseData(const int& num_of_classes) : num_of_classes(num_of_classes), viewing_time_sum(0), zero_viewing_time(num_of_classes)
+CourseData::CourseData(const int& num_of_classes) : num_of_classes(num_of_classes), zero_viewing_time(num_of_classes)
 {
     classes_array = new ClassesTree*[num_of_classes];
     for(int i = 0; i < num_of_classes; i++)
@@ -9,7 +9,7 @@ CourseData::CourseData(const int& num_of_classes) : num_of_classes(num_of_classe
     }
 }
 
-CourseData::CourseData(const CourseData& to_copy) : num_of_classes(to_copy.num_of_classes), viewing_time_sum(to_copy.viewing_time_sum), zero_viewing_time(to_copy.zero_viewing_time)
+CourseData::CourseData(const CourseData& to_copy) : num_of_classes(to_copy.num_of_classes), zero_viewing_time(to_copy.zero_viewing_time)
 {
     classes_array = new ClassesTree*[num_of_classes];
     for(int i = 0; i < num_of_classes; i++)

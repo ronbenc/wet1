@@ -19,7 +19,7 @@ public:
     Avoided(const Avoided& to_copy);
     ~Avoided();
     void UnAvoid(const unsigned int& index);
-    void PrintAvoided();
+    void PrintAvoided() const;
 };
 
 

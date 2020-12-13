@@ -45,7 +45,7 @@ void Avoided::UnAvoid(const unsigned int& index)
     }
 }
 
-void Avoided::PrintAvoided()
+void Avoided::PrintAvoided() const
 {
     for(int i = start; i < size; i += avoided_fwd[i])
     {
