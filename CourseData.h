@@ -5,15 +5,15 @@
 #include <set>
 #include <map>
 
-typedef std::set<std::pair<int, int>> ClassTree;
+typedef std::set<std::pair<int, int>> ClassesTree;
 
 class CourseData
 {
 public:
-    ClassTree** classes_array; //an array of pointers
+    ClassesTree** classes_array; //an array of pointers
     const unsigned int num_of_classes;
     Avoided zero_viewing_time;
-    int sum;
+    int viewing_time_sum;
     
     CourseData(const unsigned int num_of_classes);
     ~CourseData();
