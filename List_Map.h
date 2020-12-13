@@ -15,6 +15,7 @@ public:
     ~Map_Node() = default;
 };
 
+//assumptions: operator < is defined for S
 template <class S, class T>
 class List_Map
 {
@@ -43,6 +44,8 @@ public:
     List_Map(const List_Map& to_copy);
     ~List_Map();
     bool is_empty() const;
+    //returns an iterator to an element with key equivalent to key if found. else, returns an iterator to the closest element with key smaller then key
+    iterator find_position(const S& key);
     iterator insert(const S& key, const T& value = T());
     T& operator[] (const S& key);
     iterator erase(iterator pos);
@@ -81,12 +84,20 @@ bool List_Map<S, T>::is_empty() const
     return (head == nullptr);
 }
 
-//assumptions on S: '<' operator defined
 template <class S, class T>
-typename List_Map<S, T>::iterator List_Map<S, T>::insert(const S& key, const T& value )
+typename List_Map<S, T>::iterator List_Map<S, T>::find_position(const S& key)
 {
     List_Map<S, T>::iterator it = this->begin();
     for(it; it != this->end() && it->key < key; ++it);
+    return it;
+}
+
+template <class S, class T>
+typename List_Map<S, T>::iterator List_Map<S, T>::insert(const S& key, const T& value )
+{
+    // List_Map<S, T>::iterator it = this->begin();
+    // for(it; it != this->end() && it->key < key; ++it);
+    List_Map<S, T>::iterator it = find_position(key);
     if(it == this->end() || it->key != key)
     {
         it = insert_before(it, key);
@@ -100,8 +111,9 @@ typename List_Map<S, T>::iterator List_Map<S, T>::insert(const S& key, const T& 
 template <class S, class T>
 T& List_Map<S, T>::operator[] (const S& key)
 {
-    List_Map<S, T>::iterator it = this->begin();
-    for(it; it != this->end() && it->key < key; ++it);
+    // List_Map<S, T>::iterator it = this->begin();
+    // for(it; it != this->end() && it->key < key; ++it);
+    List_Map<S, T>::iterator it = find_position(key);
     if(it == this->end() || it->key != key)
     {
         it = insert_before(it, key);
@@ -226,10 +238,12 @@ typename List_Map<S, T>::iterator List_Map<S, T>::insert_before(iterator pos, co
     {
     private:
         Map_Node<S, T>* curr;
+        
         iterator(Map_Node<S, T>* curr) : curr(curr) {};
         friend class List_Map<S, T>;
 
     public:
+        iterator() : curr(nullptr) {};
         // Assumptions: non for all iterator's methods
         Map_Node<S, T>* operator->() const
         {

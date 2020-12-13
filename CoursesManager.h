@@ -9,8 +9,8 @@
 
 class CoursesManager
 {
-private:
-    std::map<int, ClassesTree> most_viewed;
+public:
+    List_Map<int, ClassesTree> most_viewed;
     std::map<int const, CourseData> course_map;
 
 public:
@@ -18,7 +18,7 @@ public:
     ~CoursesManager() = default;
     void AddCourse(const int courseID, const int numOfClasses);
     void RemoveCourse(const int courseID);
-    void WatchClass(const int courseID, const int classID, const int time);
+    void WatchClass(const int courseID, const int classID, int time);
     int TimeViewed(const int courseID, const int classID);
     void PrintMostViewed();
 };

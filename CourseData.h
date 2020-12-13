@@ -1,6 +1,7 @@
 #ifndef WET1_COURSE_DATA_H
 #define WET1_COURSE_DATA_H
 
+#include "List_Map.h"
 #include "Avoided.h"
 #include <set>
 #include <map>
@@ -10,7 +11,8 @@ typedef std::set<std::pair<int, int>> ClassesTree;
 class CourseData
 {
 public:
-    ClassesTree** classes_array; //an array of pointers
+    //ClassesTree** classes_array; //an array of pointers / maybe iterators /naive approach - int
+    List_Map<int, ClassesTree>::iterator* classes_array;
     const int num_of_classes;
     Avoided zero_viewing_time;
 

@@ -23,28 +23,46 @@ void CoursesManager::RemoveCourse(const int courseID)
   course_map.erase(courseID);
 }
 
-void CoursesManager::WatchClass(const int courseID, const int classID, const int time)
+void CoursesManager::WatchClass(const int courseID, const int classID, int time)
 {
   assert(courseID > 0 && classID >= 0 && time >= 0 && course_map.count(courseID) != 0 && classID < course_map[courseID].num_of_classes);
   if(time == 0)
   {
     return;
   }
-  //handle adresse is not null
-  most_viewed[time].insert(std::pair<int const, int const>(courseID, classID));
-  course_map[courseID].classes_array[classID] = &most_viewed[time];
-  course_map[courseID].zero_viewing_time.UnAvoid(classID);
+  
+  List_Map<int, ClassesTree>::iterator curr_time_it = course_map[courseID].classes_array[classID];
+  if(curr_time_it == most_viewed.end())  //handle uninitialized
+  {
+    assert(course_map[courseID].classes_array[classID] == most_viewed.end());
+    most_viewed[time].insert(std::pair<int const, int const>(courseID, classID)); //optimize using hints! avoid double search
+    course_map[courseID].classes_array[classID] = most_viewed.find_position(time);
+    course_map[courseID].zero_viewing_time.UnAvoid(classID);
+  }
+  else //update time
+  {
+    assert(course_map[courseID].classes_array[classID] != most_viewed.end());
+    curr_time_it->value.erase({courseID, classID});
+    // if(curr_time_it->value.empty())
+    // {
+    //   most_viewed.erase(curr_time_it);
+    // }
+    int prev_time = curr_time_it->key;
+    time += prev_time;
+    most_viewed[time].insert(std::pair<int const, int const>(courseID, classID));
+    course_map[courseID].classes_array[classID] = most_viewed.find_position(courseID); //optimize using hints! avoid double search
+  }
 }
 
 void CoursesManager::PrintMostViewed()
 {
-  for(std::map<int, ClassesTree>::const_reverse_iterator most_viewed_it = most_viewed.rbegin(); most_viewed_it != most_viewed.rend(); most_viewed_it++)
+  for(List_Map<int, ClassesTree>::reverse_iterator most_viewed_it = most_viewed.rbegin(); most_viewed_it != most_viewed.rend(); most_viewed_it++)
   {
-    int curr_time = most_viewed_it->first;
-    ClassesTree curr_set = most_viewed_it->second;
-    for(ClassesTree::const_iterator classes_it = curr_set.begin(); classes_it != curr_set.end(); classes_it++)
+    int curr_time = most_viewed_it->key;
+    ClassesTree curr_classes = most_viewed_it->value;
+    for(ClassesTree::const_iterator classes_it = curr_classes.begin(); classes_it != curr_classes.end(); classes_it++)
     {
-      std::cout<<"time: "<<curr_time<<" ,lecture: "<<most_viewed_it->first<<" ,class: "<<classes_it->second<<std::endl;
+      std::cout<<"time: "<<curr_time<<" ,lecture: "<<classes_it->first<<" ,class: "<<classes_it->second<<std::endl;
     }
   }
 
