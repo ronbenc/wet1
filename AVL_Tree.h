@@ -45,7 +45,7 @@ class AVL_Tree
     TreeNode<T>* min;
     int size;
 
-    void singleBalanceCheck(TreeNode<T>* leaf);
+    void BalanceCheck(TreeNode<T>* leaf, bool single_rotate);
     TreeNode<T>* llrotation(TreeNode<T>* vertex);
     TreeNode<T>* rrrotation(TreeNode<T>* vertex);
     TreeNode<T>* lrrotation(TreeNode<T>* vertex);
@@ -62,8 +62,7 @@ class AVL_Tree
     ~AVL_Tree();    
     void insertNode(T data);
     void removeNode(T data);
-    TreeNode<T>* getRoot() const;
-    // friend std::ostream& operator<< (std::ostream& os, const AVL_Tree<T>& tree);
+    TreeNode<T>* getRoot() const;    
 };
 
 template<class T>
@@ -233,7 +232,7 @@ void AVL_Tree<T>::insert(T data, TreeNode<T>* vertex)
         else
         {
 			vertex->setLeft(new TreeNode<T>(data));
-            this->min = vertex;
+            // this->min = vertex;
         }
 	}
     else if(data > vertex->getData())
@@ -255,6 +254,12 @@ void AVL_Tree<T>::insertNode(T data)
     if(root) 
     {
         this->insert(data, root);
+        TreeNode<T>* curr = this->searchNode(data);
+        if((*curr) < (*this->min))
+        {
+            min = this->searchNode(data);
+            assert (min);
+        }
     }
     else
     {
@@ -264,11 +269,11 @@ void AVL_Tree<T>::insertNode(T data)
     this->size++;
     TreeNode<T> *vertex = this->searchNode(data);
     assert(vertex);
-    this->singleBalanceCheck(vertex);
+    this->BalanceCheck(vertex, true);
 }
 
 template <class T>
-void AVL_Tree<T>::singleBalanceCheck(TreeNode<T>* leaf)
+void AVL_Tree<T>::BalanceCheck(TreeNode<T>* leaf, bool single_rotate)
 {
     TreeNode<T>* vertex = leaf;
     TreeNode<T>* new_root = nullptr;
@@ -282,12 +287,18 @@ void AVL_Tree<T>::singleBalanceCheck(TreeNode<T>* leaf)
             if(vertex->getLeft()->getBF() >= 0)
             {
                 TreeNode<T>* rot_result = this->llrotation(vertex);
-                break;//single rotation
+                if(single_rotate)
+                {
+                    break;//single rotation
+                }                
             }
             else if(vertex->getLeft()->getBF() == -1)
             {
                 new_root = this->lrrotation(vertex);
-                break;//single rotation
+                if(single_rotate)
+                {
+                    break;//single rotation
+                }                
             }
         }
         else if(vertex->getBF() == -2)
@@ -295,17 +306,24 @@ void AVL_Tree<T>::singleBalanceCheck(TreeNode<T>* leaf)
             if(vertex->getRight()->getBF() <= 0)
             {
                 TreeNode<T>* rot_result = this->rrrotation(vertex);
-                break;//single rotation
+                if(single_rotate)
+                {
+                    break;//single rotation
+                }                
             }
             else if(vertex->getRight()->getBF() == 1)
             {
                 new_root = this->rlrotation(vertex);
-                break;//single rotation
+                if(single_rotate)
+                {
+                    break;//single rotation
+                }                
             }
         }
-        this->heightUpdate(leaf);
+        // this->heightUpdate(leaf);
         vertex = vertex->getParent();
     }    
+    this->heightUpdate(leaf);
 }
 
 template <class T>
@@ -340,5 +358,75 @@ TreeNode<T>* AVL_Tree<T>::searchNode(T data)
     }
     return nullptr; //not found in tree
 }
+
+template<class T>
+void AVL_Tree<T>::removeNode(T data)
+{
+    TreeNode<T>* curr = this->searchNode(data);
+    if (!curr) {return;}
+    TreeNode<T>* curr_parent = curr->getParent();
+    TreeNode<T>* toBalance = nullptr;
+    if(data == min->getData())
+    {
+        min = min->getParent();
+    }
+    if(!curr->getLeft() && !curr->getRight())   //case 1: has no children
+    {
+        if(curr != root) //if curr is not root, set parent's child ptr to null
+        {
+            toBalance = curr_parent;
+        }
+        else //if curr is root, set root to null
+        {
+            this->root = nullptr;
+        }        
+        delete curr;
+    }
+    else if(curr->getLeft() && curr->getLeft()) //case 2: has two children
+    {
+        TreeNode<T>* node = curr->getRight();
+        while(node->getLeft())
+        {
+            node = node->getLeft();
+        }
+        TreeNode<T>* successor = node; //find the desired node to switch with deleted node
+        T val = successor->getData();
+        curr->setData(val); //set data in the node which was removed to desired data
+        toBalance = curr;
+        //delete successor and it's right child (successor has only 1 right child at most, and child is a leaf)
+        delete successor->getRight();
+        delete successor;                
+    }
+    else // case 3: has one child
+    {
+        TreeNode<T>* child = (curr->getLeft() ? curr->getLeft() : curr->getRight());
+        if(curr != root)
+        {
+            if(curr == curr_parent->getLeft())
+            {
+                delete curr;
+                curr_parent->setLeft(child);
+            }
+            else
+            {
+                delete curr;
+                curr_parent->setRight(child);
+            }
+            toBalance = curr_parent;
+        }
+        else
+        {
+            delete curr;
+            root = child;
+        }
+    }
+    //balance tree
+    size--;
+    if(toBalance)
+    {
+        this->BalanceCheck(toBalance, false);
+    }    
+}
+
 
 #endif //WET1_AVL_TREE_H
