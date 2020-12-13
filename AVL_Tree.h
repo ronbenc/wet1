@@ -1,7 +1,14 @@
-//**************Generic AVL Tree:******************
+//********************************Generic AVL Tree:***************************************
 
-// The data structure is an implementation of a genereic
-// AVL Tree, which supports the follwing operations:
+// The data structure is an implementation of a genereic AVL Tree in which T is the generic type.
+
+//***********Assumptions*************
+// The following operators should be available: 
+// operator<, operator>, operator<=, operator >= operator==, operator!= between two T objects
+// operator=, operator<<(ostream&, T)
+
+//***********Functionality*************
+// The following data structure supports the follwing operations:
 
 // Constructor of an AVL Tree, returns the tree by value, default root is null
 //     AVL_Tree(TreeNode<T>* r = nullptr);
@@ -18,17 +25,21 @@
 //Print to os a given AVL Tree, supports concatenations
 // std::ostream& operator<<(std::ostream& os, const AVL_Tree<T>& tree);
 
-// An example of using the data structure:
+//***********Example of Use*************
 
 // int main()
 // {    
 //     AVL_Tree<int> tree = AVL_Tree<int>();
 //     tree.insertNode(0);
 //     tree.insertNode(1);
-//     tree.insertNode(2);
+//     tree.removeNode(0);
 //     std::cout << tree;
 //     return 0;
 // }
+
+
+
+
 
 #ifndef WET1_AVL_TREE_H
 #define WET1_AVL_TREE_H
@@ -55,7 +66,8 @@ class AVL_Tree
     TreeNode<T>* searchNode(T data);
     TreeNode<T>* findMin();
     TreeNode<T>* findMax();   
-    TreeNode<T>* getRoot();    
+    TreeNode<T>* getRoot();
+    void deleteTree(TreeNode<T>* root);
 
     public:    
     AVL_Tree(TreeNode<T>* r = nullptr);
@@ -92,10 +104,16 @@ AVL_Tree<T>::AVL_Tree(TreeNode<T>* r)
 template<class T>
 AVL_Tree<T>::~AVL_Tree()
 {    
-    if(!this) {return;}
-    delete this->getRoot()->getLeft();
-    delete this->getRoot()->getRight();
-    delete this->getRoot();
+    deleteTree(this->root);   
+}
+
+template<class T>
+void AVL_Tree<T>::deleteTree(TreeNode<T>* root)
+{
+    if(!root) {return;}
+    deleteTree(root->getLeft());
+    deleteTree(root->getRight());
+    delete root;    
 }
 
 template <class T>
@@ -232,7 +250,6 @@ void AVL_Tree<T>::insert(T data, TreeNode<T>* vertex)
         else
         {
 			vertex->setLeft(new TreeNode<T>(data));
-            // this->min = vertex;
         }
 	}
     else if(data > vertex->getData())
@@ -276,28 +293,24 @@ template <class T>
 void AVL_Tree<T>::BalanceCheck(TreeNode<T>* leaf, bool single_rotate)
 {
     TreeNode<T>* vertex = leaf;
-    TreeNode<T>* new_root = nullptr;
-    TreeNode<T>* parent = nullptr;
-    bool is_rotated = false;
     while(vertex)
     {
-        parent = vertex->getParent();
         if(vertex->getBF() == 2)
         {
             if(vertex->getLeft()->getBF() >= 0)
             {
-                TreeNode<T>* rot_result = this->llrotation(vertex);
+                this->llrotation(vertex);
                 if(single_rotate)
                 {
-                    break;//single rotation
+                    break;
                 }                
             }
             else if(vertex->getLeft()->getBF() == -1)
             {
-                new_root = this->lrrotation(vertex);
+                this->lrrotation(vertex);
                 if(single_rotate)
                 {
-                    break;//single rotation
+                    break;
                 }                
             }
         }
@@ -305,22 +318,21 @@ void AVL_Tree<T>::BalanceCheck(TreeNode<T>* leaf, bool single_rotate)
         {
             if(vertex->getRight()->getBF() <= 0)
             {
-                TreeNode<T>* rot_result = this->rrrotation(vertex);
+                this->rrrotation(vertex);
                 if(single_rotate)
                 {
-                    break;//single rotation
+                    break;
                 }                
             }
             else if(vertex->getRight()->getBF() == 1)
             {
-                new_root = this->rlrotation(vertex);
+                this->rlrotation(vertex);
                 if(single_rotate)
                 {
-                    break;//single rotation
+                    break;
                 }                
             }
         }
-        // this->heightUpdate(leaf);
         vertex = vertex->getParent();
     }    
     this->heightUpdate(leaf);
@@ -356,7 +368,7 @@ TreeNode<T>* AVL_Tree<T>::searchNode(T data)
             node_ptr = node_ptr->getRight();
         }            
     }
-    return nullptr; //not found in tree
+    return nullptr;
 }
 
 template<class T>
@@ -420,7 +432,6 @@ void AVL_Tree<T>::removeNode(T data)
             root = child;
         }
     }
-    //balance tree
     size--;
     if(toBalance)
     {
