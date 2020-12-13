@@ -55,7 +55,8 @@ class AVL_Tree
     TreeNode<T>* searchNode(T data);
     TreeNode<T>* findMin();
     TreeNode<T>* findMax();   
-    TreeNode<T>* getRoot();    
+    TreeNode<T>* getRoot();
+    void deleteTree(TreeNode<T>* root);
 
     public:    
     AVL_Tree(TreeNode<T>* r = nullptr);
@@ -92,10 +93,16 @@ AVL_Tree<T>::AVL_Tree(TreeNode<T>* r)
 template<class T>
 AVL_Tree<T>::~AVL_Tree()
 {    
-    if(!this) {return;}
-    delete this->getRoot()->getLeft();
-    delete this->getRoot()->getRight();
-    delete this->getRoot();
+    deleteTree(this->root);   
+}
+
+template<class T>
+void AVL_Tree<T>::deleteTree(TreeNode<T>* root)
+{
+    if(!root) {return;}
+    deleteTree(root->getLeft());
+    deleteTree(root->getRight());
+    delete root;    
 }
 
 template <class T>
@@ -276,28 +283,24 @@ template <class T>
 void AVL_Tree<T>::BalanceCheck(TreeNode<T>* leaf, bool single_rotate)
 {
     TreeNode<T>* vertex = leaf;
-    TreeNode<T>* new_root = nullptr;
-    TreeNode<T>* parent = nullptr;
-    bool is_rotated = false;
     while(vertex)
     {
-        parent = vertex->getParent();
         if(vertex->getBF() == 2)
         {
             if(vertex->getLeft()->getBF() >= 0)
             {
-                TreeNode<T>* rot_result = this->llrotation(vertex);
+                this->llrotation(vertex);
                 if(single_rotate)
                 {
-                    break;//single rotation
+                    break;
                 }                
             }
             else if(vertex->getLeft()->getBF() == -1)
             {
-                new_root = this->lrrotation(vertex);
+                this->lrrotation(vertex);
                 if(single_rotate)
                 {
-                    break;//single rotation
+                    break;
                 }                
             }
         }
@@ -305,22 +308,21 @@ void AVL_Tree<T>::BalanceCheck(TreeNode<T>* leaf, bool single_rotate)
         {
             if(vertex->getRight()->getBF() <= 0)
             {
-                TreeNode<T>* rot_result = this->rrrotation(vertex);
+                this->rrrotation(vertex);
                 if(single_rotate)
                 {
-                    break;//single rotation
+                    break;
                 }                
             }
             else if(vertex->getRight()->getBF() == 1)
             {
-                new_root = this->rlrotation(vertex);
+                this->rlrotation(vertex);
                 if(single_rotate)
                 {
-                    break;//single rotation
+                    break;
                 }                
             }
         }
-        // this->heightUpdate(leaf);
         vertex = vertex->getParent();
     }    
     this->heightUpdate(leaf);
@@ -420,7 +422,6 @@ void AVL_Tree<T>::removeNode(T data)
             root = child;
         }
     }
-    //balance tree
     size--;
     if(toBalance)
     {
