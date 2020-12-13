@@ -35,14 +35,9 @@ class TreeNode
     void setLeft(TreeNode<T>*);
     void setRight(TreeNode<T>*);
     void setParent(TreeNode<T>*);
-    void setHeight(const int&);
-    
+    void setHeight(const int&);    
     static void print2DUtil(std::ostream& os, const TreeNode<T> *root, int space);
-    static void print2D(std::ostream& os, const TreeNode<T> *root);
-    // TreeNode<T>* nodeSearch(T data) const;
-
-    // static void searchKey(TreeNode<T>* &curr, T data, TreeNode* &parent);
-    
+    static void print2D(std::ostream& os, const TreeNode<T> *root);    
 };
 
 
@@ -67,7 +62,7 @@ template<class T>
 bool operator<= (const TreeNode<T>&, const TreeNode<T>&);
 
 template<class T>
-std::ostream& operator<<(std::ostream&, const TreeNode<T>&);//checked, might change
+std::ostream& operator<<(std::ostream&, const TreeNode<T>&);
 
 
 
@@ -187,14 +182,12 @@ const int& TreeNode<T>::getHeight() const
 template<class T>
 void TreeNode<T>::setData(const T& data)
 {
-    //throw exception
     this->data = data;
 }
 
 template<class T>
 void TreeNode<T>::setLeft(TreeNode<T>* input)
 {
-    //throw exception
     this->l = input;
     if(input)
     {
@@ -206,7 +199,6 @@ void TreeNode<T>::setLeft(TreeNode<T>* input)
 template<class T>
 void TreeNode<T>::setRight(TreeNode<T>* input)
 {
-    //throw exception
     this->r = input;
     if(input)
     {
@@ -218,14 +210,12 @@ void TreeNode<T>::setRight(TreeNode<T>* input)
 template<class T>
 void TreeNode<T>::setParent(TreeNode<T>* input)
 {
-    //throw exception
     this->p = input;
 }
 
 template<class T>
 void TreeNode<T>::setHeight(const int& input)
 {
-    //throw exception
     this->height = input;
 }
 
@@ -305,7 +295,6 @@ template<class T>
 void TreeNode<T>::print2D(std::ostream& os, const TreeNode<T> *root)
 {  
     print2DUtil(os, root, 0);  
-}  
-
+}
 
 #endif //TREENODE_H

@@ -1,7 +1,14 @@
-//**************Generic AVL Tree:******************
+//********************************Generic AVL Tree:***************************************
 
-// The data structure is an implementation of a genereic
-// AVL Tree, which supports the follwing operations:
+// The data structure is an implementation of a genereic AVL Tree in which T is the generic type.
+
+//***********Assumptions*************
+// The following operators should be available: 
+// operator<, operator>, operator<=, operator >= operator==, operator!= between two T objects
+// operator=, operator<<(ostream&, T)
+
+//***********Functionality*************
+// The following data structure supports the follwing operations:
 
 // Constructor of an AVL Tree, returns the tree by value, default root is null
 //     AVL_Tree(TreeNode<T>* r = nullptr);
@@ -18,17 +25,21 @@
 //Print to os a given AVL Tree, supports concatenations
 // std::ostream& operator<<(std::ostream& os, const AVL_Tree<T>& tree);
 
-// An example of using the data structure:
+//***********Example of Use*************
 
 // int main()
 // {    
 //     AVL_Tree<int> tree = AVL_Tree<int>();
 //     tree.insertNode(0);
 //     tree.insertNode(1);
-//     tree.insertNode(2);
+//     tree.removeNode(0);
 //     std::cout << tree;
 //     return 0;
 // }
+
+
+
+
 
 #ifndef WET1_AVL_TREE_H
 #define WET1_AVL_TREE_H
@@ -239,7 +250,6 @@ void AVL_Tree<T>::insert(T data, TreeNode<T>* vertex)
         else
         {
 			vertex->setLeft(new TreeNode<T>(data));
-            // this->min = vertex;
         }
 	}
     else if(data > vertex->getData())
@@ -358,7 +368,7 @@ TreeNode<T>* AVL_Tree<T>::searchNode(T data)
             node_ptr = node_ptr->getRight();
         }            
     }
-    return nullptr; //not found in tree
+    return nullptr;
 }
 
 template<class T>
