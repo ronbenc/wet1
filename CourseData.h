@@ -11,11 +11,12 @@ class CourseData
 {
 public:
     ClassesTree** classes_array; //an array of pointers
-    const unsigned int num_of_classes;
+    const int num_of_classes;
     Avoided zero_viewing_time;
     int viewing_time_sum;
-    
-    CourseData(const unsigned int num_of_classes);
+
+    CourseData(const int& num_of_classes);
+    CourseData(const CourseData& to_copy);
     ~CourseData();
 
     void WatchClass(int classID, int time);

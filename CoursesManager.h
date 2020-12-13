@@ -10,13 +10,13 @@ class CoursesManager
 {
 private:
     std::map<int, ClassesTree* > most_viewed;
-    std::map<int, CourseData> course_map;
+    std::map<int const, CourseData> course_map;
 
 public:
     CoursesManager() = default;
     ~CoursesManager() = default;
-    void AddCourse(int courseID, int numOfClasses);
-    void RemoveCourse(int courseID);
+    void AddCourse(const int courseID, const int numOfClasses);
+    // void RemoveCourse(const int courseID);
 };
 
 
