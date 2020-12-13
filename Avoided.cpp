@@ -45,11 +45,46 @@ void Avoided::UnAvoid(const unsigned int& index)
     }
 }
 
-void Avoided::PrintAvoided() const
+//*************const_iterator********************************************************
+
+typename Avoided::const_iterator Avoided::begin() const
 {
-    for(int i = start; i < size; i += avoided_fwd[i])
-    {
-        std::cout<<i;
-    }
-    std::cout<<std::endl;
+    return const_iterator(this, start);
+}
+
+typename Avoided::const_iterator Avoided::end() const
+{
+    return const_iterator(this, size);
+}
+
+Avoided::const_iterator::const_iterator(const Avoided* avoided, int index) : avoided(avoided), index(index) {}
+
+const unsigned int& Avoided::const_iterator::operator*() const
+{
+    assert(index < avoided->size);
+
+    return index;
+}
+
+typename Avoided::const_iterator& Avoided::const_iterator::operator++()
+{
+    index += avoided->avoided_fwd[index];
+    return *this;
+}
+
+typename Avoided::const_iterator Avoided::const_iterator::operator++(int)
+{
+    const_iterator result = *this;
+    ++*this;
+    return result;
+}
+
+bool Avoided::const_iterator::operator==(const const_iterator& it) const
+{
+    return (avoided == it.avoided && index == it.index);
+}
+
+bool Avoided::const_iterator::operator!=(const const_iterator& it) const
+{
+    return !(*this == it);
 }
