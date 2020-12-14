@@ -2,6 +2,7 @@
 #define WET1_LIST_MAP_H
 #include <cassert>
 
+//assumptions: S, T constructors and destructors is defined
 template <class S, class T>
 class Map_Node
 {
@@ -44,7 +45,9 @@ public:
     List_Map(const List_Map& to_copy);
     ~List_Map();
     bool is_empty() const;
-    //returns an iterator to an element with key equivalent to key if found. else, returns an iterator to the closest element with key smaller then key
+    //returns an iterator to an element with key equivalent to key if found. else, returns an iterator to the closest element with key bigger then key
+    //hint - iterator, used as a suggestion as to where to start the search
+    iterator find_position(iterator hint, const S& key);
     iterator find_position(const S& key);
     iterator insert(const S& key, const T& value = T());
     T& operator[] (const S& key);
@@ -85,18 +88,22 @@ bool List_Map<S, T>::is_empty() const
 }
 
 template <class S, class T>
+typename List_Map<S, T>::iterator List_Map<S, T>::find_position(iterator hint, const S& key)
+{
+    for(hint; hint != this->end() && hint->key < key; ++hint);
+    return hint;
+}
+
+template <class S, class T>
 typename List_Map<S, T>::iterator List_Map<S, T>::find_position(const S& key)
 {
     List_Map<S, T>::iterator it = this->begin();
-    for(it; it != this->end() && it->key < key; ++it);
-    return it;
+    return find_position(it, key);
 }
 
 template <class S, class T>
 typename List_Map<S, T>::iterator List_Map<S, T>::insert(const S& key, const T& value )
 {
-    // List_Map<S, T>::iterator it = this->begin();
-    // for(it; it != this->end() && it->key < key; ++it);
     List_Map<S, T>::iterator it = find_position(key);
     if(it == this->end() || it->key != key)
     {
