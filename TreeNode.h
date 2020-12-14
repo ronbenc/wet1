@@ -21,7 +21,7 @@ class TreeNode
     ~TreeNode();
     void heightCalc();
     int getBF();
-    T getData();
+    T& getData();
     TreeNode* getLeft();
     TreeNode* getRight();
     TreeNode* getParent();
@@ -121,7 +121,7 @@ int TreeNode<T>::getBF()
 }
 
 template<class T>
-T TreeNode<T>::getData()
+T& TreeNode<T>::getData()
 {
     return this->data;
 }
