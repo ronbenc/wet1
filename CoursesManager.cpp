@@ -83,13 +83,16 @@ void CoursesManager::PrintMostViewed()
     ClassesTree curr_classes = most_viewed_it->value;
     for(ClassesTree::const_iterator classes_it = curr_classes.begin(); classes_it != curr_classes.end(); classes_it++)
     {
-      std::cout<<"time: "<<curr_time<<" ,lecture: "<<classes_it->first<<" ,class: "<<classes_it->second<<std::endl;
+      std::cout<<"time: "<<curr_time<<", lecture: "<<classes_it->first<<" ,class: "<<classes_it->second<<std::endl;
     }
   }
 
   //print zero viewing time
   for(std::map<int const, CourseData>::const_iterator course_it = course_map.begin(); course_it != course_map.end(); course_it++)
   {
-    course_it->second.zero_viewing_time.PrintAvoided();
+    for(const unsigned int& index : course_it->second.zero_viewing_time)
+    {
+      std::cout<<"Time: 0, lecture: "<<course_it->first<<" ,class: "<<index<<std::endl;
+    }
   }
 }

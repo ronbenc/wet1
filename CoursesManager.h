@@ -5,7 +5,7 @@
 #include "CourseData.h"
 
 
-//typedef std::set<std::pair<int, int>> ClassesTree;
+typedef std::set<std::pair<int, int>> ClassesTree;
 
 class CoursesManager
 {
