@@ -268,8 +268,9 @@ typename List_Map<S, T>::iterator List_Map<S, T>::insert_before(iterator pos, co
         friend class List_Map<S, T>;
 
     public:
-        iterator() : curr(nullptr) {};
         // Assumptions: non for all iterator's methods
+        iterator() : curr(nullptr) {};
+
         Map_Node<S, T>* operator->() const
         {
             assert(curr != nullptr);
@@ -335,6 +336,8 @@ typename List_Map<S, T>::iterator List_Map<S, T>::insert_before(iterator pos, co
 
     public:
         // Assumptions: non for all const_iterator's methods
+
+        const_iterator() : curr(nullptr) {};
 
         const Map_Node<S, T>* operator->() const
         {
@@ -403,6 +406,8 @@ typename List_Map<S, T>::iterator List_Map<S, T>::insert_before(iterator pos, co
     public:
         // Assumptions: non for all reverse_iterator's methods
 
+        reverse_iterator() : curr(nullptr) {};
+
         Map_Node<S, T>* operator->() const
         {
             assert(curr != nullptr);
@@ -470,6 +475,8 @@ typename List_Map<S, T>::iterator List_Map<S, T>::insert_before(iterator pos, co
     public:
         // Assumptions: non for all const_reverse_iterator's methods
 
+        const_reverse_iterator() : curr(nullptr) {};
+
        const Map_Node<S, T>* operator->() const
         {
             assert(curr != nullptr);
@@ -491,7 +498,7 @@ typename List_Map<S, T>::iterator List_Map<S, T>::insert_before(iterator pos, co
         const_reverse_iterator operator++(int)
         {
             assert(curr != nullptr);
-            reverse_iterator result = *this;
+            const_reverse_iterator result = *this;
             ++*this;
             return result;
         }

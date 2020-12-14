@@ -63,6 +63,37 @@ int CoursesManager::TimeViewed(const int courseID, const int classID)
   }
 }
 
+void CoursesManager::GetMostViewedClasses(int numOfClasses, int* courses, int* classes) const
+{
+  int index = 0;
+  for(List_Map<int, ClassesTree>::const_reverse_iterator most_viewed_it = most_viewed.rbegin(); most_viewed_it != most_viewed.rend(); most_viewed_it++)
+  {
+    ClassesTree curr_classes = most_viewed_it->value;
+    for(ClassesTree::const_iterator classes_it = curr_classes.begin(); (classes_it != curr_classes.end() && index <= numOfClasses ); classes_it++, index++)
+    {
+      courses[index] = classes_it->first;
+      classes[index] = classes_it->second;
+    }
+  }
+
+  for(std::map<int const, CourseData>::const_iterator course_it = course_map.begin(); course_it != course_map.end(); course_it++)
+  {
+    int curr_course = course_it->first;
+    for(Avoided::const_iterator classes_it = course_it->second.zero_viewing_time.begin(); (classes_it != course_it->second.zero_viewing_time.end() && index <= numOfClasses); classes_it++, index++)
+    {
+      courses[index] = curr_course;
+      classes[index] = *classes_it;
+    }
+  }
+
+  if(index < numOfClasses)
+  {
+    //throw something...
+  }
+
+}
+
+
 void CoursesManager::PrintMostViewed()
 {
   for(List_Map<int, ClassesTree>::reverse_iterator most_viewed_it = most_viewed.rbegin(); most_viewed_it != most_viewed.rend(); most_viewed_it++)
@@ -85,7 +116,7 @@ void CoursesManager::PrintMostViewed()
   }
 }
 
-//****************************************private methods***********************************************************
+//***********************************************private methods***********************************************************
 void CoursesManager::AddTimeViewed(const int courseID, const int classID, int time)
 {
   assert(course_map[courseID].classes_array[classID] == most_viewed.end());

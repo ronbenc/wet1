@@ -20,6 +20,8 @@ public:
     void RemoveCourse(const int courseID);
     void WatchClass(const int courseID, const int classID, int time);
     int TimeViewed(const int courseID, const int classID);
+    void GetMostViewedClasses(int numOfClasses, int* courses, int* classes) const;
+
     void PrintMostViewed();
 
 private:
