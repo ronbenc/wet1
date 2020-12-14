@@ -142,7 +142,14 @@ TreeNode<T>* AVL_Tree<T>::llrotation(TreeNode<T>* vertex)
     new_root->setRight(prev_root);
     if(prev_parent)
     {
-        prev_parent->setLeft(new_root);
+        if(prev_parent->getLeft() == vertex)
+        {
+            prev_parent->setLeft(new_root);
+        }
+        else
+        {
+            prev_parent->setRight(new_root);
+        }
     }
     else
     {
@@ -162,7 +169,14 @@ TreeNode<T>* AVL_Tree<T>::rrrotation(TreeNode<T>* vertex)
     new_root->setLeft(prev_root);
     if(prev_parent)
     {
-        prev_parent->setRight(new_root);
+        if(prev_parent->getLeft() == vertex)
+        {
+            prev_parent->setLeft(new_root);
+        }
+        else
+        {
+            prev_parent->setRight(new_root);
+        }
     }
     else
     {
@@ -184,7 +198,14 @@ TreeNode<T>* AVL_Tree<T>:: lrrotation(TreeNode<T>* vertex)
     new_root->setRight(prev_root);
     if(prev_parent)
     {
-        prev_parent->setLeft(new_root);
+        if(prev_parent->getLeft() == vertex)
+        {
+            prev_parent->setLeft(new_root);
+        }
+        else
+        {
+            prev_parent->setRight(new_root);
+        }
     }
     else
     {
@@ -206,7 +227,14 @@ TreeNode<T>* AVL_Tree<T>::rlrotation(TreeNode<T>* vertex)
     new_root->setLeft(prev_root);
     if(prev_parent)
     {
-        prev_parent->setRight(new_root);
+        if(prev_parent->getLeft() == vertex)
+        {
+            prev_parent->setLeft(new_root);
+        }
+        else
+        {
+            prev_parent->setRight(new_root);
+        }
     }
     else
     {

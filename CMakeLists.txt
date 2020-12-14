@@ -4,7 +4,7 @@ project(CourseManager VERSION 0.1.0)
 include(CTest)
 enable_testing()
 
-add_executable(CourseManager main.cpp CoursesManager.cpp CourseData.cpp Avoided.cpp) 
+add_executable(avl main.cpp TreeNode.h AVL_Tree.h) 
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
