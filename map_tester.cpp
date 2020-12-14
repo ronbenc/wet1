@@ -3,31 +3,38 @@
 
 int main()
 {
-    List_Map<unsigned int, char> map;
+    List_Map<int, char> map;
 
-    //test insert
-    map[0] = 'A';
-    map[1] = 'B';
-    map.insert(2, 'C');
+    // //test insert
+    // map[0] = 'A';
+    // map[1] = 'B';
+    // map.insert(2, 'C');
 
-    for(int i=0; i < 3; i++)
-    {
-        assert(map[i] == char('A'+ i));
-    }
+    // for(int i=0; i < 3; i++)
+    // {
+    //     assert(map[i] == char('A'+ i));
+    // }
 
-    //test erase and is_empty
-    for(int i=0; i < 3; i++)
-    {
-        map.erase(i);
-    }
-    assert(map.is_empty());
+    // //test erase and is_empty
+    // for(int i=0; i < 3; i++)
+    // {
+    //     map.erase(i);
+    // }
+    // assert(map.is_empty());
 
-    //test overriding
-    map[0] = 'A';
-    map[0] = 'a';
-    assert(map[0] == 'a');
-    map.insert(0, 'A');
-    assert(map[0] == 'A');
+    // //test overriding
+    // map[0] = 'A';
+    // map[0] = 'a';
+    // assert(map[0] == 'a');
+    // map.insert(0, 'A');
+    // assert(map[0] == 'A');
+
+    List_Map<int, char>::iterator it = map.begin();
+    it = map.insert(it, 1, 'A');
+    map[3] = 'C';
+    map[5] = 'E';
+    it = map.find_position(2);
+    map.insert(it, 2, 'B');
 
 
     return 0;

@@ -49,7 +49,11 @@ public:
     //hint - iterator, used as a suggestion as to where to start the search
     iterator find_position(iterator hint, const S& key);
     iterator find_position(const S& key);
+    //Inserts element into the container, if the container doesn't already contain an element with an equivalent key.
+    //hint - iterator to the position before which the new element will be inserted
+    iterator insert(iterator hint, const S& key, const T& value = T());
     iterator insert(const S& key, const T& value = T());
+
     T& operator[] (const S& key);
     iterator erase(iterator pos);
     iterator erase(const S& key);
@@ -102,6 +106,22 @@ typename List_Map<S, T>::iterator List_Map<S, T>::find_position(const S& key)
 }
 
 template <class S, class T>
+typename List_Map<S, T>::iterator List_Map<S, T>::insert(iterator hint, const S& key, const T& value )
+{
+    if(hint != this->begin() && hint->key > key  && hint->previous->key < key)
+    {
+        assert(hint != nullptr);
+        hint = insert_before(hint, key);
+        hint->value = value;
+        return hint;
+    }
+    else //hint wasn't relevant
+    {
+        return insert(key, value);
+    }
+}
+
+template <class S, class T>
 typename List_Map<S, T>::iterator List_Map<S, T>::insert(const S& key, const T& value )
 {
     List_Map<S, T>::iterator it = find_position(key);
@@ -118,8 +138,6 @@ typename List_Map<S, T>::iterator List_Map<S, T>::insert(const S& key, const T& 
 template <class S, class T>
 T& List_Map<S, T>::operator[] (const S& key)
 {
-    // List_Map<S, T>::iterator it = this->begin();
-    // for(it; it != this->end() && it->key < key; ++it);
     List_Map<S, T>::iterator it = find_position(key);
     if(it == this->end() || it->key != key)
     {
