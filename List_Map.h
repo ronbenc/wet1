@@ -106,9 +106,9 @@ typename List_Map<S, T>::iterator List_Map<S, T>::find_position(const S& key)
 }
 
 template <class S, class T>
-typename List_Map<S, T>::iterator List_Map<S, T>::insert(iterator hint, const S& key, const T& value )
+typename List_Map<S, T>::iterator List_Map<S, T>::insert(iterator hint, const S& key, const T& value)
 {
-    if(hint != this->begin() && hint->key > key  && hint->previous->key < key)
+    if(hint != this->begin() && hint != this->end() && hint->key > key  && hint->previous->key < key)
     {
         assert(hint != nullptr);
         hint = insert_before(hint, key);

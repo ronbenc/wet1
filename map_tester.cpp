@@ -34,7 +34,10 @@ int main()
     map[3] = 'C';
     map[5] = 'E';
     it = map.find_position(2);
-    map.insert(it, 2, 'B');
+    if(it->key != 2)
+        map.insert(it, 2, 'B');
+    map.insert(it, 4, 'D');
+    
 
 
     return 0;
