@@ -3,48 +3,144 @@
 
 void *Init()
 {
-    CoursesManager *DS = new CoursesManager();
-    //handle exections...
-    return (void*)DS;
+    try
+    {
+        CoursesManager *DS = new CoursesManager();
+        return (void*)DS;
+    }
+    catch(const std::bad_alloc& e)
+    {
+        return NULL;
+    }
 }
 
 StatusType AddCourse (void *DS, int courseID, int numOfClasses)
 {
-    ((CoursesManager*)DS)->AddCourse(courseID, numOfClasses);
-    //handle exections...
+    if(DS == NULL)
+    {
+        return INVALID_INPUT;
+    }
+    try
+    {
+        ((CoursesManager*)DS)->AddCourse(courseID, numOfClasses);
+    }
+    catch(const std::bad_alloc& e)
+    {
+        return ALLOCATION_ERROR;
+    }
+    catch(const InvalidInput& e)
+    {
+        return INVALID_INPUT;
+    }
+    catch(const Failure& e)
+    {
+        return FAILURE;
+    }
     return SUCCESS;
 }
 
 StatusType RemoveCourse(void *DS, int courseID)
 {
-    ((CoursesManager*)DS)->RemoveCourse(courseID);
-    //handle exections...
+    if(DS == NULL)
+    {
+        return INVALID_INPUT;
+    }
+    try
+    {
+        ((CoursesManager*)DS)->RemoveCourse(courseID);
+    }
+    catch(const std::bad_alloc& e)
+    {
+        return ALLOCATION_ERROR;
+    }
+    catch(const InvalidInput& e)
+    {
+        return INVALID_INPUT;
+    }
+    catch(const Failure& e)
+    {
+        return FAILURE;
+    }
     return SUCCESS;
 }
 
 StatusType WatchClass(void *DS, int courseID, int classID, int time)
 {
-    ((CoursesManager*)DS)->WatchClass(courseID, classID, time);
-    //handle exections...
+    if(DS == NULL)
+    {
+        return INVALID_INPUT;
+    }
+    try
+    {
+        ((CoursesManager*)DS)->WatchClass(courseID, classID, time);
+    }
+    catch(const std::bad_alloc& e)
+    {
+        return ALLOCATION_ERROR;
+    }
+    catch(const InvalidInput& e)
+    {
+        return INVALID_INPUT;
+    }
+    catch(const Failure& e)
+    {
+        return FAILURE;
+    }
     return SUCCESS;
 }
 
 StatusType TimeViewed(void *DS, int courseID, int classID, int *timeViewed)
 {
-    *timeViewed = ((CoursesManager*)DS)->TimeViewed(courseID, classID);
-    //handle exections...
+    if(DS == NULL)
+    {
+        return INVALID_INPUT;
+    }
+    try
+    {
+        *timeViewed = ((CoursesManager*)DS)->TimeViewed(courseID, classID);
+    }
+    catch(const std::bad_alloc& e)
+    {
+        return ALLOCATION_ERROR;
+    }
+    catch(const InvalidInput& e)
+    {
+        return INVALID_INPUT;
+    }
+    catch(const Failure& e)
+    {
+        return FAILURE;
+    }
     return SUCCESS;
 }
 
 StatusType GetMostViewedClasses(void *DS, int numOfClasses, int *courses, int *classes)
 {
-    ((CoursesManager*)DS)->GetMostViewedClasses(numOfClasses, courses, classes);
-    //handle exections...
+    if(DS == NULL)
+    {
+        return INVALID_INPUT;
+    }
+    try
+    {
+        ((CoursesManager*)DS)->GetMostViewedClasses(numOfClasses, courses, classes);
+    }
+    catch(const std::bad_alloc& e)
+    {
+        return ALLOCATION_ERROR;
+    }
+    catch(const InvalidInput& e)
+    {
+        return INVALID_INPUT;
+    }
+    catch(const Failure& e)
+    {
+        return FAILURE;
+    }
     return SUCCESS;
 }
 
 void Quit(void** DS)
 {
-    delete (CoursesManager*)*DS;
-    DS = NULL;
+    delete *(CoursesManager**)DS;
+    *DS = NULL;
 }

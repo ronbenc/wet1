@@ -3,14 +3,30 @@
 
 void CoursesManager::AddCourse(const int courseID, const int numOfClasses)
 {
-  assert(courseID > 0 && numOfClasses > 0);
+  if(courseID <= 0 || numOfClasses <= 0)
+  {
+    throw InvalidInput();
+  }
+  if(course_map.count(courseID) > 0)
+  {
+    throw Failure();
+  }
+  assert(courseID > 0 && numOfClasses > 0 && course_map.count(courseID) == 0);
   course_map.insert(std::pair<int const, CourseData>(courseID, numOfClasses));
 }
 
 void CoursesManager::RemoveCourse(const int courseID)
 {
-  assert(courseID > 0);
-  assert(course_map.count(courseID) != 0);
+  if(courseID <= 0)
+  {
+    throw InvalidInput();
+  }
+  if(course_map.count(courseID) == 0)
+  {
+    throw Failure();
+  }
+
+  assert(courseID > 0 && course_map.count(courseID) > 0);
 
   CourseData to_remove(course_map[courseID]);
   for(int classID = 0; classID < to_remove.num_of_classes; classID++)
@@ -31,13 +47,20 @@ void CoursesManager::RemoveCourse(const int courseID)
 
 void CoursesManager::WatchClass(const int courseID, const int classID, int time)
 {
-  assert(courseID > 0 && classID >= 0 && time >= 0 && course_map.count(courseID) != 0 && classID < course_map[courseID].num_of_classes);
-
-  if(time == 0)
+  if(time <= 0 || classID < 0 || courseID <= 0)
   {
-    return;
+    throw InvalidInput();
   }
-  
+  if(course_map.count(courseID) == 0)
+  {
+    throw Failure();
+  }
+  if(classID+1 > course_map[courseID].num_of_classes)
+  {
+    throw InvalidInput();
+  }
+  assert(time > 0 && classID >= 0 && courseID > 0 && course_map.count(courseID) != 0 && classID < course_map[courseID].num_of_classes);
+
   List_Map<int, ClassesTree>::iterator curr_time_it = course_map[courseID].classes_array[classID];
   if(curr_time_it == most_viewed.end())
   {
@@ -51,6 +74,20 @@ void CoursesManager::WatchClass(const int courseID, const int classID, int time)
 
 int CoursesManager::TimeViewed(const int courseID, const int classID)
 {
+  if(classID < 0 || courseID <= 0 )
+  {
+    throw InvalidInput();
+  }
+  if(course_map.count(courseID) == 0)
+  {
+    throw Failure();
+  }
+  if(classID+1 > course_map[courseID].num_of_classes)
+  {
+    throw InvalidInput();
+  }
+  assert(classID >= 0 && courseID > 0 && course_map.count(courseID) > 0 && classID < course_map[courseID].num_of_classes);
+
   List_Map<int, ClassesTree>::iterator time_it = course_map[courseID].classes_array[classID];
   if(time_it == most_viewed.end())
   {
@@ -65,6 +102,10 @@ int CoursesManager::TimeViewed(const int courseID, const int classID)
 
 void CoursesManager::GetMostViewedClasses(int numOfClasses, int* courses, int* classes) const
 {
+  if(numOfClasses <= 0)
+  {
+    throw InvalidInput();
+  }
   int index = 0;
   for(List_Map<int, ClassesTree>::const_reverse_iterator most_viewed_it = most_viewed.rbegin(); most_viewed_it != most_viewed.rend(); ++most_viewed_it)
   {
@@ -88,13 +129,12 @@ void CoursesManager::GetMostViewedClasses(int numOfClasses, int* courses, int* c
 
   if(index < numOfClasses)
   {
-    //throw something...
+    throw Failure();
   }
 
 }
 
-
-void CoursesManager::PrintMostViewed()
+void CoursesManager::PrintMostViewed() //delete!
 {
   for(List_Map<int, ClassesTree>::reverse_iterator most_viewed_it = most_viewed.rbegin(); most_viewed_it != most_viewed.rend(); most_viewed_it++)
   {

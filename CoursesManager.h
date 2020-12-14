@@ -3,7 +3,7 @@
 
 
 #include "CourseData.h"
-
+#include "Exceptions.h"
 
 typedef std::set<std::pair<int, int>> ClassesTree;
 
