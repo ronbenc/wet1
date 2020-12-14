@@ -11,16 +11,19 @@
 // The following data structure supports the follwing operations:
 
 // Constructor of an AVL Tree, returns the tree by value, default root is null
-//     AVL_Tree(TreeNode<T>* r = nullptr);
+//AVL_Tree(TreeNode<T>* r = nullptr);
 
 // Constructor of an AVL Tree, destroys the tree recursively
-//     ~AVL_Tree();    
+//~AVL_Tree();    
 
 //Insert given data to the tree
 // void insertNode(T data);
 
 //Remove given data from the tree
 // void removeNode (T data);
+
+//Returns true if a given data exists in the tree, false otherwise
+//bool contains(T data);
 
 //Print to os a given AVL Tree, supports concatenations
 // std::ostream& operator<<(std::ostream& os, const AVL_Tree<T>& tree);
@@ -71,9 +74,10 @@ class AVL_Tree
 
     public:    
     AVL_Tree(TreeNode<T>* r = nullptr);
-    ~AVL_Tree();    
+    ~AVL_Tree();
     void insertNode(T data);
     void removeNode(T data);
+    bool contains(T data);
     TreeNode<T>* getRoot() const;    
 };
 
@@ -138,7 +142,14 @@ TreeNode<T>* AVL_Tree<T>::llrotation(TreeNode<T>* vertex)
     new_root->setRight(prev_root);
     if(prev_parent)
     {
-        prev_parent->setLeft(new_root);
+        if(prev_parent->getLeft() == vertex)
+        {
+            prev_parent->setLeft(new_root);
+        }
+        else
+        {
+            prev_parent->setRight(new_root);
+        }
     }
     else
     {
@@ -158,7 +169,14 @@ TreeNode<T>* AVL_Tree<T>::rrrotation(TreeNode<T>* vertex)
     new_root->setLeft(prev_root);
     if(prev_parent)
     {
-        prev_parent->setRight(new_root);
+        if(prev_parent->getLeft() == vertex)
+        {
+            prev_parent->setLeft(new_root);
+        }
+        else
+        {
+            prev_parent->setRight(new_root);
+        }
     }
     else
     {
@@ -180,7 +198,14 @@ TreeNode<T>* AVL_Tree<T>:: lrrotation(TreeNode<T>* vertex)
     new_root->setRight(prev_root);
     if(prev_parent)
     {
-        prev_parent->setLeft(new_root);
+        if(prev_parent->getLeft() == vertex)
+        {
+            prev_parent->setLeft(new_root);
+        }
+        else
+        {
+            prev_parent->setRight(new_root);
+        }
     }
     else
     {
@@ -202,7 +227,14 @@ TreeNode<T>* AVL_Tree<T>::rlrotation(TreeNode<T>* vertex)
     new_root->setLeft(prev_root);
     if(prev_parent)
     {
-        prev_parent->setRight(new_root);
+        if(prev_parent->getLeft() == vertex)
+        {
+            prev_parent->setLeft(new_root);
+        }
+        else
+        {
+            prev_parent->setRight(new_root);
+        }
     }
     else
     {
@@ -439,5 +471,10 @@ void AVL_Tree<T>::removeNode(T data)
     }    
 }
 
+template<class T>
+bool AVL_Tree<T>::contains(T data)
+{
+    return (this->searchNode(data) ? true : false);
+}
 
 #endif //WET1_AVL_TREE_H
