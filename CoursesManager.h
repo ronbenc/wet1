@@ -1,7 +1,7 @@
 #ifndef WET1_COURSE_MANGAGER_H
 #define WET1_COURSE_MANGAGER_H
 
-
+#include "Pair.h"
 #include "CourseData.h"
 #include "Exceptions.h"
 
