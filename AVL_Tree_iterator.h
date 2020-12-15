@@ -65,8 +65,9 @@ class AVL_Tree<T>::iterator
     friend class AVL_Tree<T>;
 
     public:
-    const AVL_Tree<T>* tree; //used to be private
-    int index; //used to be private
+    const AVL_Tree<T>* tree;
+    int index;
+    TreeNode<T>* node;
     T& operator*() const;
     iterator& operator++();
     iterator operator++(int);
@@ -78,7 +79,7 @@ class AVL_Tree<T>::iterator
 };
 
 template<class T>
-AVL_Tree<T>::iterator::iterator(const AVL_Tree<T>* tree, int index) : tree(tree), index(index) {}
+AVL_Tree<T>::iterator::iterator(const AVL_Tree<T>* tree, int index) : tree(tree), index(index), node (tree->findMin()) {}
 
 template<class T>
 typename AVL_Tree<T>::iterator AVL_Tree<T>::begin() const
@@ -99,18 +100,14 @@ T& AVL_Tree<T>::iterator::operator*() const
     {
         //throw exception
     }
-    TreeNode<T>* tmp = this->tree->findMin();
-    for(int i = 0 ; i < index ; i++)
-    {
-        tmp = this->tree->findNextPtr(tmp);
-    }
-    return tmp->getData();
+    return this->node->getData();
 }
 
 template<class T>
 typename AVL_Tree<T>::iterator& AVL_Tree<T>::iterator::operator++ () 
 {
     ++index;
+    node = this->tree->findNextPtr(node);
     return *this;
 }
 
@@ -142,9 +139,9 @@ class AVL_Tree<T>::const_iterator
     friend class AVL_Tree<T>;
 
     public:
-    // Assumptions: non for all iterator's methods    
-    const AVL_Tree<T>* const tree; //used to be private
-    int index; //used to be private
+    const AVL_Tree<T>* const tree;
+    int index;
+    const TreeNode<T>* node;
     const T& operator*() const;
     const_iterator& operator++();
     const_iterator operator++(int);
@@ -156,7 +153,7 @@ class AVL_Tree<T>::const_iterator
 };
 
 template<class T>
-AVL_Tree<T>::const_iterator::const_iterator(const AVL_Tree<T>* const tree, int index) : tree(tree), index(index) {}
+AVL_Tree<T>::const_iterator::const_iterator(const AVL_Tree<T>* const tree, int index) : tree(tree), index(index), node(tree->findMin()) {}
 
 template<class T>
 typename AVL_Tree<T>::const_iterator AVL_Tree<T>::cbegin() const
@@ -175,20 +172,17 @@ const T& AVL_Tree<T>::const_iterator::operator*() const
 {
     if(index >= this->tree->size)
     {
-        std::cout << "illegal access to undefined node" << std::endl;
+        //throw exception
     }
-    TreeNode<T>* tmp = this->tree->findMin();
-    for(int i = 0 ; i < index ; i++)
-    {
-        tmp = this->tree->findNextPtr(tmp);
-    }
-    return tmp->getData();
+    return this->node->getData();
 }
 
 template<class T>
 typename AVL_Tree<T>::const_iterator& AVL_Tree<T>::const_iterator::operator++ () 
 {
     ++index;
+    
+    node = tree->constFindNextPtr(node);
     return *this;
 }
 

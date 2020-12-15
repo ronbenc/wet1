@@ -2,6 +2,7 @@
 #define WET1_LIST_MAP_H
 #include <cassert>
 
+//assumptions: S, T constructors and destructors is defined
 template <class S, class T>
 class Map_Node
 {
@@ -44,9 +45,15 @@ public:
     List_Map(const List_Map& to_copy);
     ~List_Map();
     bool is_empty() const;
-    //returns an iterator to an element with key equivalent to key if found. else, returns an iterator to the closest element with key smaller then key
+    //returns an iterator to an element with key equivalent to key if found. else, returns an iterator to the closest element with key bigger then key
+    //hint - iterator, used as a suggestion as to where to start the search
+    iterator find_position(iterator hint, const S& key);
     iterator find_position(const S& key);
+    //Inserts element into the container, if the container doesn't already contain an element with an equivalent key.
+    //hint - iterator to the position before which the new element will be inserted
+    iterator insert(iterator hint, const S& key, const T& value = T());
     iterator insert(const S& key, const T& value = T());
+
     T& operator[] (const S& key);
     iterator erase(iterator pos);
     iterator erase(const S& key);
@@ -85,18 +92,38 @@ bool List_Map<S, T>::is_empty() const
 }
 
 template <class S, class T>
+typename List_Map<S, T>::iterator List_Map<S, T>::find_position(iterator hint, const S& key)
+{
+    for(hint; hint != this->end() && hint->key < key; ++hint);
+    return hint;
+}
+
+template <class S, class T>
 typename List_Map<S, T>::iterator List_Map<S, T>::find_position(const S& key)
 {
     List_Map<S, T>::iterator it = this->begin();
-    for(it; it != this->end() && it->key < key; ++it);
-    return it;
+    return find_position(it, key);
+}
+
+template <class S, class T>
+typename List_Map<S, T>::iterator List_Map<S, T>::insert(iterator hint, const S& key, const T& value)
+{
+    if(hint != this->begin() && hint != this->end() && hint->key > key  && hint->previous->key < key)
+    {
+        assert(hint != nullptr);
+        hint = insert_before(hint, key);
+        hint->value = value;
+        return hint;
+    }
+    else //hint wasn't relevant
+    {
+        return insert(key, value);
+    }
 }
 
 template <class S, class T>
 typename List_Map<S, T>::iterator List_Map<S, T>::insert(const S& key, const T& value )
 {
-    // List_Map<S, T>::iterator it = this->begin();
-    // for(it; it != this->end() && it->key < key; ++it);
     List_Map<S, T>::iterator it = find_position(key);
     if(it == this->end() || it->key != key)
     {
@@ -111,8 +138,6 @@ typename List_Map<S, T>::iterator List_Map<S, T>::insert(const S& key, const T& 
 template <class S, class T>
 T& List_Map<S, T>::operator[] (const S& key)
 {
-    // List_Map<S, T>::iterator it = this->begin();
-    // for(it; it != this->end() && it->key < key; ++it);
     List_Map<S, T>::iterator it = find_position(key);
     if(it == this->end() || it->key != key)
     {
@@ -243,8 +268,9 @@ typename List_Map<S, T>::iterator List_Map<S, T>::insert_before(iterator pos, co
         friend class List_Map<S, T>;
 
     public:
-        iterator() : curr(nullptr) {};
         // Assumptions: non for all iterator's methods
+        iterator() : curr(nullptr) {};
+
         Map_Node<S, T>* operator->() const
         {
             assert(curr != nullptr);
@@ -310,6 +336,8 @@ typename List_Map<S, T>::iterator List_Map<S, T>::insert_before(iterator pos, co
 
     public:
         // Assumptions: non for all const_iterator's methods
+
+        const_iterator() : curr(nullptr) {};
 
         const Map_Node<S, T>* operator->() const
         {
@@ -378,6 +406,8 @@ typename List_Map<S, T>::iterator List_Map<S, T>::insert_before(iterator pos, co
     public:
         // Assumptions: non for all reverse_iterator's methods
 
+        reverse_iterator() : curr(nullptr) {};
+
         Map_Node<S, T>* operator->() const
         {
             assert(curr != nullptr);
@@ -445,6 +475,8 @@ typename List_Map<S, T>::iterator List_Map<S, T>::insert_before(iterator pos, co
     public:
         // Assumptions: non for all const_reverse_iterator's methods
 
+        const_reverse_iterator() : curr(nullptr) {};
+
        const Map_Node<S, T>* operator->() const
         {
             assert(curr != nullptr);
@@ -466,7 +498,7 @@ typename List_Map<S, T>::iterator List_Map<S, T>::insert_before(iterator pos, co
         const_reverse_iterator operator++(int)
         {
             assert(curr != nullptr);
-            reverse_iterator result = *this;
+            const_reverse_iterator result = *this;
             ++*this;
             return result;
         }
