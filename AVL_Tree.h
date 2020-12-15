@@ -67,14 +67,14 @@ class AVL_Tree
     static void heightUpdate(TreeNode<T>* node);       
     TreeNode<T>* findMin() const;
     TreeNode<T>* findMax() const;   
-    TreeNode<T>* getRoot();
+    
     void deleteTree(TreeNode<T>* root);
     TreeNode<T>* findNextPtr(TreeNode<T>*) const;
     const TreeNode<T>* constFindNextPtr(const TreeNode<T>*) const;
     const TreeNode<T>* constFindPrevPtr(const TreeNode<T>*) const;
     TreeNode<T>* findPrevPtr(TreeNode<T>*) const;
     TreeNode<T>* searchNode(T data);
-    
+            
     public:    
     AVL_Tree(TreeNode<T>* r = nullptr);
     ~AVL_Tree();
@@ -82,6 +82,7 @@ class AVL_Tree
     void removeNode(T data);
     bool contains(T data);
     TreeNode<T>* getRoot() const;   
+    TreeNode<T>* getRoot();
 
     class iterator;
     iterator begin() const;
