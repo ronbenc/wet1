@@ -94,7 +94,7 @@ bool List_Map<S, T>::is_empty() const
 template <class S, class T>
 typename List_Map<S, T>::iterator List_Map<S, T>::find_position(iterator hint, const S& key)
 {
-    for(hint; hint != this->end() && hint->key < key; ++hint);
+    for(; hint != this->end() && hint->key < key; ++hint);
     return hint;
 }
 
