@@ -8,17 +8,16 @@
 class Avoided
 {
 private:
-    unsigned int* avoided_fwd;
-    unsigned int* avoided_bwd;
-    unsigned int start;
+    const int size;
+    int start;
+    int* avoided_fwd;
+    int* avoided_bwd;
 
 public:
-    const unsigned int size;
-
-    Avoided(const unsigned int& size);
+    Avoided(const int size);
     Avoided(const Avoided& to_copy);
     ~Avoided();
-    void UnAvoid(const unsigned int& index);
+    void UnAvoid(const int index);
 
     class const_iterator;
     const_iterator begin() const;
