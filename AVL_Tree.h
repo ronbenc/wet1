@@ -58,27 +58,37 @@ class AVL_Tree
     TreeNode<T>* root;
     TreeNode<T>* min;
     int size;
-
     void BalanceCheck(TreeNode<T>* leaf, bool single_rotate);
     TreeNode<T>* llrotation(TreeNode<T>* vertex);
     TreeNode<T>* rrrotation(TreeNode<T>* vertex);
     TreeNode<T>* lrrotation(TreeNode<T>* vertex);
     TreeNode<T>* rlrotation(TreeNode<T>* vertex);
     void insert(T data, TreeNode<T>* = nullptr);
-    static void heightUpdate(TreeNode<T>* node);
-    TreeNode<T>* searchNode(T data);
-    TreeNode<T>* findMin();
-    TreeNode<T>* findMax();   
+    static void heightUpdate(TreeNode<T>* node);       
+    TreeNode<T>* findMin() const;
+    TreeNode<T>* findMax() const;   
     TreeNode<T>* getRoot();
     void deleteTree(TreeNode<T>* root);
-
+    TreeNode<T>* findNextPtr(TreeNode<T>*) const;
+    const TreeNode<T>* constFindNextPtr(const TreeNode<T>*) const;
+    const TreeNode<T>* constFindPrevPtr(const TreeNode<T>*) const;
+    TreeNode<T>* findPrevPtr(TreeNode<T>*) const;
+    TreeNode<T>* searchNode(T data);
+    
     public:    
     AVL_Tree(TreeNode<T>* r = nullptr);
     ~AVL_Tree();
     void insertNode(T data);
     void removeNode(T data);
     bool contains(T data);
-    TreeNode<T>* getRoot() const;    
+    TreeNode<T>* getRoot() const;   
+
+    class iterator;
+    iterator begin() const;
+    iterator end() const; 
+    class const_iterator;
+    const_iterator cbegin() const;
+    const_iterator cend() const; 
 };
 
 template<class T>
@@ -245,7 +255,7 @@ TreeNode<T>* AVL_Tree<T>::rlrotation(TreeNode<T>* vertex)
 }
 
 template <class T>
-TreeNode<T>* AVL_Tree<T>::findMin()
+TreeNode<T>* AVL_Tree<T>::findMin() const
 {
     TreeNode<T>* node = this->getRoot();
     while(node->getLeft())
@@ -256,7 +266,7 @@ TreeNode<T>* AVL_Tree<T>::findMin()
 }
 
 template <class T>
-TreeNode<T>* AVL_Tree<T>::findMax()
+TreeNode<T>* AVL_Tree<T>::findMax() const
 {
     TreeNode<T>* node = this->getRoot();
     while(node->getRight())
@@ -475,6 +485,138 @@ template<class T>
 bool AVL_Tree<T>::contains(T data)
 {
     return (this->searchNode(data) ? true : false);
+}
+
+template<class T>
+const TreeNode<T>* AVL_Tree<T>::constFindNextPtr(const TreeNode<T>* node) const
+{
+    if(node->getRight()) // if node has a right son, find min of sub-tree rooted by right son
+    {
+        const TreeNode<T>* sub_root = node->getRight();
+        while(sub_root->getLeft())
+        {
+            sub_root = sub_root->getLeft();
+        }
+        return sub_root;        
+    }
+    else if(node->getParent())
+    {
+        if(node->getParent()->getLeft() == node) //if node is a left son
+        {
+            return node->getParent();
+        }
+        else //if node is a right son
+        {
+            while(node->getParent() && node->getParent()->getLeft() != node)
+            {
+                node = node->getParent();
+            }
+            return node->getParent();
+        }
+    }        
+    else //node is max
+    {
+        return nullptr;
+    }
+}
+
+template<class T>
+TreeNode<T>* AVL_Tree<T>::findNextPtr(TreeNode<T>* node) const
+{
+    if(node->getRight()) // if node has a right son, find min of sub-tree rooted by right son
+    {
+        TreeNode<T>* sub_root = node->getRight();
+        while(sub_root->getLeft())
+        {
+            sub_root = sub_root->getLeft();
+        }
+        return sub_root;        
+    }
+    else if(node->getParent())
+    {
+        if(node->getParent()->getLeft() == node) //if node is a left son
+        {
+            return node->getParent();
+        }
+        else //if node is a right son
+        {
+            while(node->getParent() && node->getParent()->getLeft() != node)
+            {
+                node = node->getParent();
+            }
+            return node->getParent();
+        }
+    }        
+    else //node is max
+    {
+        return nullptr;
+    }
+}
+
+template<class T>
+const TreeNode<T>* AVL_Tree<T>::constFindPrevPtr(const TreeNode<T>* node) const
+{
+    if(node->getLeft()) // if node has a left son, find max of sub-tree rooted by left son
+    {
+        TreeNode<T>* sub_root = node->getLeft();
+        while(sub_root->getRight())
+        {
+            sub_root = sub_root->getRight();
+        }
+        return sub_root;        
+    }
+    else if(node->getParent())
+    {
+        if(node->getParent()->getRight() == node) //if node is a right son
+        {
+            return node->getParent();
+        }
+        else //if node is a left son
+        {
+            while(node->getParent() && node->getParent()->getRight() != node)
+            {
+                node = node->getParent();
+            }
+            return node->getParent();
+        }
+    }        
+    else //node is min
+    {
+        return nullptr;
+    }
+}
+
+template<class T>
+TreeNode<T>* AVL_Tree<T>::findPrevPtr(TreeNode<T>* node) const
+{
+    if(node->getLeft()) // if node has a left son, find max of sub-tree rooted by left son
+    {
+        TreeNode<T>* sub_root = node->getLeft();
+        while(sub_root->getRight())
+        {
+            sub_root = sub_root->getRight();
+        }
+        return sub_root;        
+    }
+    else if(node->getParent())
+    {
+        if(node->getParent()->getRight() == node) //if node is a right son
+        {
+            return node->getParent();
+        }
+        else //if node is a left son
+        {
+            while(node->getParent() && node->getParent()->getRight() != node)
+            {
+                node = node->getParent();
+            }
+            return node->getParent();
+        }
+    }        
+    else //node is min
+    {
+        return nullptr;
+    }
 }
 
 #endif //WET1_AVL_TREE_H
