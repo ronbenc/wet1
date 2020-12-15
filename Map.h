@@ -164,47 +164,40 @@ template<class T, class S>
 class Map<T,S>::iterator
 {
     friend class Map<T,S>;
-    typename AVL_Tree<std::pair<T,S>>::iterator* it;
+    typename AVL_Tree<std::pair<T,S>>::iterator* tree_it;
+    // typename AVL_Tree<std::pair<T,S>>::iterator it;
        
     public:    
-    iterator(const AVL_Tree<std::pair<T,S>>*);
+    iterator(const Map<T,S>* map);    
     // const std::pair<T,S>& operator*() const;
-    // iterator& operator++();
-    // iterator operator++(int);    
+    iterator& operator++();
+    iterator operator++(int);    
     // bool operator==(const iterator& it) const;
     // bool operator!=(const iterator& it) const;
     // iterator(const iterator&) = default;    
     // iterator& operator=(const iterator&) = default;
-    // ~iterator() = default;
+    ~iterator() = default;
 };
 
 template<class T, class S>
-Map<T,S>::iterator::iterator(const AVL_Tree<std::pair<T,S>>* tree_ptr)
+Map<T,S>::iterator::iterator(const Map<T,S>* map)
 {
-    *it = typename AVL_Tree<std::pair<T,S>>::iterator(tree_ptr, 0);
+    typename AVL_Tree<std::pair<T,S>>::iterator tmp = typename AVL_Tree<std::pair<T,S>>::iterator(map->getTree(), 0);
+    tree_it = &tmp;
 }
 
-// typename Map<T,S>::iterator Map<T,S>::begin() const
-// {
-    
-// }
+template<class T, class S>
+typename Map<T,S>::iterator Map<T,S>::begin() const
+{
+    return iterator(this);
+}
 
-
-
-//  : tree(map->tree), node(map.findVal(key)) {}
-
-// template<class T, class S>
-// typename Map<T,S>::iterator Map<T,S>::begin() const
-// {
-//     return iterator(this, tree->min);
-// }
-
-// template<class T, class S>
-// typename Map<T,S>::iterator Map<T,S>::end() const
-// {
-//     return nullptr;
-//     // return iterator(this, this->size);
-// }
+template<class T, class S>
+typename Map<T,S>::iterator Map<T,S>::end() const
+{
+    return nullptr;
+    // return iterator(this, this->size);
+}
 
 // template<class T, class S>
 // const std::pair<T,S>& Map<T,S>::iterator::operator*() const
@@ -216,21 +209,22 @@ Map<T,S>::iterator::iterator(const AVL_Tree<std::pair<T,S>>* tree_ptr)
 //     return this->node->getData();
 // }
 
-// template<class T, class S>
-// typename Map<T,S>::iterator& Map<T,S>::iterator::operator++ () 
-// {
-//     ++index;
-//     node = this->tree->findNextPtr(node);
-//     return *this;
-// }
+//prefix
+template<class T, class S>
+typename Map<T,S>::iterator& Map<T,S>::iterator::operator++()
+{
+    ++(*this->tree_it);
+    return *this;
+}
 
-// template<class T, class S>
-// typename Map<T,S>::iterator Map<T,S>::iterator::operator++ (int) 
-// {
-//     iterator result = *this;
-//     ++*this;
-//     return result;
-// }
+//suffix
+template<class T, class S>
+typename Map<T,S>::iterator Map<T,S>::iterator::operator++(int) 
+{
+    iterator result = *this;
+    (*this->tree_it)++;
+    return result;
+}
 
 // template<class T, class S>
 // bool Map<T,S>::iterator::operator== (const Map<T,S>::iterator& a) const

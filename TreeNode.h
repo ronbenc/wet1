@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iostream>
 #include <cassert>
+#include "Exceptions.h"
 
 template<class T>
 class TreeNode
@@ -123,71 +124,119 @@ int TreeNode<T>::getBF()
 template<class T>
 T& TreeNode<T>::getData()
 {
+    if(!this) 
+    {
+        throw IllegalArgument_TreeNode();
+    }
     return this->data;
 }
 template<class T>
 TreeNode<T>* TreeNode<T>::getLeft()
 {
+    if(!this) 
+    {
+        throw IllegalArgument_TreeNode();
+    }
     return this->l;
 }
 
 template<class T>
 TreeNode<T>* TreeNode<T>::getRight()
 {
+    if(!this) 
+    {
+        throw IllegalArgument_TreeNode();
+    }
     return this->r;
 }
 
 template<class T>
 TreeNode<T>* TreeNode<T>::getParent()
 {
+    if(!this) 
+    {
+        throw IllegalArgument_TreeNode();
+    }
     return this->p;
 }
 
 template<class T>
 int TreeNode<T>::getHeight()
 {
+    if(!this) 
+    {
+        throw IllegalArgument_TreeNode();
+    }
     return this->height;
 }
 
 template<class T>
 const T& TreeNode<T>::getData() const // itay changed from T to const T& 151220 1053 - debug
 {
+    if(!this) 
+    {
+        throw IllegalArgument_TreeNode();
+    }
     return this->data;
 }
 
 template<class T>
 const TreeNode<T>* TreeNode<T>::getLeft() const
 {
+    if(!this) 
+    {
+        throw IllegalArgument_TreeNode();
+    }
     return this->l;
 }
 
 template<class T>
 const TreeNode<T>* TreeNode<T>::getRight() const
 {
+    if(!this) 
+    {
+        throw IllegalArgument_TreeNode();
+    }
     return this->r;
 }
 
 template<class T>
 const TreeNode<T>* TreeNode<T>::getParent() const
 {
+    if(!this) 
+    {
+        throw IllegalArgument_TreeNode();
+    }
     return this->p;
 }
 
 template<class T>
 const int& TreeNode<T>::getHeight() const
 {
+    if(!this) 
+    {
+        throw IllegalArgument_TreeNode();
+    }
     return this->height;
 }
 
 template<class T>
 void TreeNode<T>::setData(const T& data)
 {
+    if(!this) 
+    {
+        throw IllegalArgument_TreeNode();
+    }
     this->data = data;
 }
 
 template<class T>
 void TreeNode<T>::setLeft(TreeNode<T>* input)
 {
+    if(!this) 
+    {
+        throw IllegalArgument_TreeNode();
+    }    
     this->l = input;
     if(input)
     {
@@ -199,6 +248,10 @@ void TreeNode<T>::setLeft(TreeNode<T>* input)
 template<class T>
 void TreeNode<T>::setRight(TreeNode<T>* input)
 {
+    if(!this) 
+    {
+        throw IllegalArgument_TreeNode();
+    }
     this->r = input;
     if(input)
     {
@@ -210,12 +263,20 @@ void TreeNode<T>::setRight(TreeNode<T>* input)
 template<class T>
 void TreeNode<T>::setParent(TreeNode<T>* input)
 {
+    if(!this) 
+    {
+        throw IllegalArgument_TreeNode();
+    }
     this->p = input;
 }
 
 template<class T>
 void TreeNode<T>::setHeight(const int& input)
 {
+    if(!this) 
+    {
+        throw IllegalArgument_TreeNode();
+    }
     this->height = input;
 }
 
@@ -236,24 +297,40 @@ bool operator!= (const TreeNode<T>& a, const TreeNode<T>& b)
 template<class T>
 bool operator< (const TreeNode<T>& a, const TreeNode<T>& b)
 {
+    if(!a || !b) 
+    {
+        throw IllegalArgument_TreeNode();
+    }
     return (a.getData () < b.getData());
 }
 
 template<class T>
 bool operator> (const TreeNode<T>& a, const TreeNode<T>& b)
 {
+    if(!a || !b) 
+    {
+        throw IllegalArgument_TreeNode();
+    }
     return (a.getData () > b.getData());
 }
 
 template<class T>
 bool operator>= (const TreeNode<T>& a, const TreeNode<T>& b)
 {
+    if(!a || !b) 
+    {
+        throw IllegalArgument_TreeNode();
+    }
     return (a.getData () >= b.getData());
 }
 
 template<class T>
 bool operator<= (const TreeNode<T>& a, const TreeNode<T>& b)
 {
+    if(!a || !b) 
+    {
+        throw IllegalArgument_TreeNode();
+    }
     return (a.getData () <= b.getData());
 }
 

@@ -62,9 +62,7 @@ class AVL_Tree<T>::iterator
 {
     public:
     iterator(const AVL_Tree<T>* tree, int index);
-    friend class AVL_Tree<T>;
-
-    public:
+    friend class AVL_Tree<T>;    
     const AVL_Tree<T>* tree;
     int index;
     TreeNode<T>* node;
