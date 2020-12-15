@@ -1,17 +1,17 @@
 #ifndef WET1_COURSE_MANGAGER_H
 #define WET1_COURSE_MANGAGER_H
 
-#include "Pair.h"
 #include "CourseData.h"
+#include "AVL_Tree.h"
 #include "Exceptions.h"
 
-typedef std::set<std::pair<int, int>> ClassesTree;
+typedef std::set<Pair<int, int>> ClassesTree;
 
 class CoursesManager
 {
 private:
-    List_Map<int, ClassesTree> most_viewed;
-    std::map<int const, CourseData> course_map;
+    List_Map<int, ClassesTree> stl_most_viewed;
+    std::map<int const, CourseData> stl_course_map;
 
 public:
     CoursesManager() = default;

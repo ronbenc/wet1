@@ -23,6 +23,8 @@ public:
     //Assumptions on S: = destructor defined
     //Assumptions on T: = destructor defined
     ~Pair() = default;
+
+    bool operator<(const Pair<S,T>& rhs) const;
 };
 
 //Assumptions on S: == operator defined
@@ -72,6 +74,13 @@ Pair<S, T>& Pair<S, T>::operator=(const Pair<S,T>& other)
 }
 
 template <class S, class T>
+bool Pair<S, T>::operator<(const Pair<S,T>& rhs) const
+{
+    return ((this->first < rhs.first) || (this->first  == rhs.first && this->second < rhs.second));
+    //return (*this) < rhs;
+}
+
+template <class S, class T>
 bool operator==(const Pair<S,T>& lhs, const Pair<S,T>& rhs)
 {
     return (lhs.first == rhs.first && lhs.second == rhs.second);
@@ -86,12 +95,7 @@ bool operator!=(const Pair<S,T>& lhs, const Pair<S,T>& rhs)
 template <class S, class T>
 bool operator<(const Pair<S,T>& lhs, const Pair<S,T>& rhs)
 {
-    if(lhs.first < rhs.second)
-    {
-        return true;
-    }
-
-    return (lhs.second == rhs.second);
+    return ((lhs.first < rhs.first) || (lhs.first == rhs.first && lhs.second < rhs.second));
 }
 
 template <class S, class T>

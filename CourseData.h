@@ -1,12 +1,13 @@
 #ifndef WET1_COURSE_DATA_H
 #define WET1_COURSE_DATA_H
 
+#include "Pair.h"
 #include "List_Map.h"
 #include "Avoided.h"
 #include <set>
 #include <map>
 
-typedef std::set<std::pair<int, int>> ClassesTree;
+typedef std::set<Pair<int, int>> ClassesTree;
 
 class CourseData
 {
