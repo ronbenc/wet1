@@ -168,23 +168,27 @@ class Map<T,S>::iterator
     // typename AVL_Tree<std::pair<T,S>>::iterator it;
        
     public:    
-    iterator(const Map<T,S>* map);    
-    // const std::pair<T,S>& operator*() const;
+    iterator(const Map<T,S>* map, int index = 0)
+    {
+        typename AVL_Tree<std::pair<T,S>>::iterator tmp = typename AVL_Tree<std::pair<T,S>>::iterator(map->getTree(), index);
+        tree_it = &tmp;
+    }
+    const std::pair<T,S>& operator*() const;
     iterator& operator++();
     iterator operator++(int);    
-    // bool operator==(const iterator& it) const;
-    // bool operator!=(const iterator& it) const;
-    // iterator(const iterator&) = default;    
-    // iterator& operator=(const iterator&) = default;
+    bool operator==(const iterator& it) const;
+    bool operator!=(const iterator& it) const;
+    iterator(const iterator&) = default;    
+    iterator& operator=(const iterator&) = default;
     ~iterator() = default;
 };
 
-template<class T, class S>
-Map<T,S>::iterator::iterator(const Map<T,S>* map)
-{
-    typename AVL_Tree<std::pair<T,S>>::iterator tmp = typename AVL_Tree<std::pair<T,S>>::iterator(map->getTree(), 0);
-    tree_it = &tmp;
-}
+// template<class T, class S>
+// Map<T,S>::iterator::iterator(const Map<T,S>* map)
+// {
+//     typename AVL_Tree<std::pair<T,S>>::iterator tmp = typename AVL_Tree<std::pair<T,S>>::iterator(map->getTree(), 0);
+//     tree_it = &tmp;
+// }
 
 template<class T, class S>
 typename Map<T,S>::iterator Map<T,S>::begin() const
@@ -195,8 +199,7 @@ typename Map<T,S>::iterator Map<T,S>::begin() const
 template<class T, class S>
 typename Map<T,S>::iterator Map<T,S>::end() const
 {
-    return nullptr;
-    // return iterator(this, this->size);
+    return iterator(this, this->getTree()->getSize());
 }
 
 // template<class T, class S>
@@ -213,7 +216,9 @@ typename Map<T,S>::iterator Map<T,S>::end() const
 template<class T, class S>
 typename Map<T,S>::iterator& Map<T,S>::iterator::operator++()
 {
-    ++(*this->tree_it);
+    typename AVL_Tree<std::pair<T,S>>::iterator tmp = *this->tree_it;
+    tmp++;
+    this->tree_it = &tmp;
     return *this;
 }
 
@@ -222,20 +227,20 @@ template<class T, class S>
 typename Map<T,S>::iterator Map<T,S>::iterator::operator++(int) 
 {
     iterator result = *this;
-    (*this->tree_it)++;
+    ++(*this);
     return result;
 }
 
-// template<class T, class S>
-// bool Map<T,S>::iterator::operator== (const Map<T,S>::iterator& a) const
-// {
-//     return ((this->tree == a.tree) && (this->index == a.index));
-// }
+template<class T, class S>
+bool Map<T,S>::iterator::operator== (const Map<T,S>::iterator& a) const
+{
+    return (this->tree_it == a.tree_it);
+}
 
-// template<class T, class S>
-// bool Map<T,S>::iterator::operator!= (const Map<T,S>::iterator& a) const
-// {
-//     return !(*this == a);
-// }
+template<class T, class S>
+bool Map<T,S>::iterator::operator!= (const Map<T,S>::iterator& a) const
+{
+    return !(*this == a);
+}
 
 #endif //WET1_MAP_H

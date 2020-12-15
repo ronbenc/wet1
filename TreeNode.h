@@ -297,40 +297,24 @@ bool operator!= (const TreeNode<T>& a, const TreeNode<T>& b)
 template<class T>
 bool operator< (const TreeNode<T>& a, const TreeNode<T>& b)
 {
-    if(!a || !b) 
-    {
-        throw IllegalArgument_TreeNode();
-    }
     return (a.getData () < b.getData());
 }
 
 template<class T>
 bool operator> (const TreeNode<T>& a, const TreeNode<T>& b)
 {
-    if(!a || !b) 
-    {
-        throw IllegalArgument_TreeNode();
-    }
     return (a.getData () > b.getData());
 }
 
 template<class T>
 bool operator>= (const TreeNode<T>& a, const TreeNode<T>& b)
 {
-    if(!a || !b) 
-    {
-        throw IllegalArgument_TreeNode();
-    }
     return (a.getData () >= b.getData());
 }
 
 template<class T>
 bool operator<= (const TreeNode<T>& a, const TreeNode<T>& b)
 {
-    if(!a || !b) 
-    {
-        throw IllegalArgument_TreeNode();
-    }
     return (a.getData () <= b.getData());
 }
 

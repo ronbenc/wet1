@@ -83,6 +83,7 @@ class AVL_Tree
     bool contains(T data);
     TreeNode<T>* getRoot() const;   
     TreeNode<T>* getRoot();
+    int getSize() const;
 
     class iterator;
     iterator begin() const;
@@ -141,6 +142,12 @@ template <class T>
 TreeNode<T>* AVL_Tree<T>::getRoot() const
 {
     return this->root;
+}
+
+template<class T>
+int AVL_Tree<T>::getSize() const
+{
+    return this->size;
 }
 
 template<class T>
