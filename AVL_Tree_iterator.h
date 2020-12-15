@@ -79,6 +79,8 @@ class AVL_Tree<T>::iterator
 
 template<class T>
 AVL_Tree<T>::iterator::iterator(const AVL_Tree<T>* tree, int index) : tree(tree), index(index), node (tree->min) {}
+//problem detected - if we do not iterate from the beginning node is not tree->min itay
+
 
 template<class T>
 typename AVL_Tree<T>::iterator AVL_Tree<T>::begin() const
