@@ -181,7 +181,7 @@ class Map<T,S>::iterator
 template<class T, class S>
 Map<T,S>::iterator::iterator(const AVL_Tree<std::pair<T,S>>* tree_ptr)
 {
-    it = typename AVL_Tree<std::pair<T,S>>::iterator(tree_ptr, 0);
+    *it = typename AVL_Tree<std::pair<T,S>>::iterator(tree_ptr, 0);
 }
 
 // typename Map<T,S>::iterator Map<T,S>::begin() const
