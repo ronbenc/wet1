@@ -7,7 +7,7 @@ void CoursesManager::AddCourse(const int courseID, const int numOfClasses)
   {
     throw InvalidInput();
   }
-  if(course_map.count(courseID) > 0)
+  if(course_map.count(courseID) > 0) //map.contain
   {
     throw Failure();
   }
@@ -21,14 +21,14 @@ void CoursesManager::RemoveCourse(const int courseID)
   {
     throw InvalidInput();
   }
-  if(course_map.count(courseID) == 0)
+  if(course_map.count(courseID) == 0) //map.contain
   {
     throw Failure();
   }
 
-  assert(courseID > 0 && course_map.count(courseID) > 0);
+  assert(courseID > 0 && course_map.count(courseID) > 0); //map.contain
 
-  CourseData to_remove(course_map[courseID]);
+  CourseData to_remove(course_map[courseID]); //operator[]
   for(int classID = 0; classID < to_remove.num_of_classes; classID++)
   {
       if(to_remove.classes_array[classID] != most_viewed.end())
@@ -42,7 +42,7 @@ void CoursesManager::RemoveCourse(const int courseID)
         }
       }
   }
-  course_map.erase(courseID);
+  course_map.erase(courseID); //map.erase
 }
 
 void CoursesManager::WatchClass(const int courseID, const int classID, int time)
@@ -51,11 +51,11 @@ void CoursesManager::WatchClass(const int courseID, const int classID, int time)
   {
     throw InvalidInput();
   }
-  if(course_map.count(courseID) == 0)
+  if(course_map.count(courseID) == 0) //map.contain(key)
   {
     throw Failure();
   }
-  if(classID+1 > course_map[courseID].num_of_classes)
+  if(classID+1 > course_map[courseID].num_of_classes) //operator[]
   {
     throw InvalidInput();
   }
@@ -110,20 +110,20 @@ void CoursesManager::GetMostViewedClasses(int numOfClasses, int* courses, int* c
   for(List_Map<int, ClassesTree>::const_reverse_iterator most_viewed_it = most_viewed.rbegin(); most_viewed_it != most_viewed.rend(); ++most_viewed_it)
   {
     ClassesTree curr_classes = most_viewed_it->value;
-    for(ClassesTree::const_iterator classes_it = curr_classes.begin(); (classes_it != curr_classes.end() && index <= numOfClasses ); ++classes_it, ++index)
+    for(ClassesTree::const_iterator classes_it = curr_classes.begin(); (classes_it != curr_classes.end() && index < numOfClasses ); ++classes_it, ++index)
     {
       courses[index] = classes_it->first;
       classes[index] = classes_it->second;
     }
   }
 
-  for(std::map<int const, CourseData>::const_iterator course_it = course_map.begin(); course_it != course_map.end(); ++course_it)
+  for(std::map<int const, CourseData>::const_iterator course_it = course_map.begin(); course_it != course_map.end() && (index < numOfClasses); ++course_it)
   {
     int curr_course = course_it->first;
-    for(Avoided::const_iterator classes_it = course_it->second.zero_viewing_time.begin(); (classes_it != course_it->second.zero_viewing_time.end() && index <= numOfClasses); ++classes_it, ++index)
+    for(Avoided::const_iterator classes_it = course_it->second.zero_viewing_time.begin(); (classes_it != course_it->second.zero_viewing_time.end() && index < numOfClasses); ++classes_it, ++index)
     {
       courses[index] = curr_course;
-      classes[index] = *classes_it;
+      classes[index] = (*classes_it);
     }
   }
 

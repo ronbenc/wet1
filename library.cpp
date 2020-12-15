@@ -116,7 +116,7 @@ StatusType TimeViewed(void *DS, int courseID, int classID, int *timeViewed)
 
 StatusType GetMostViewedClasses(void *DS, int numOfClasses, int *courses, int *classes)
 {
-    if(DS == NULL)
+    if(DS == NULL || courses == NULL || classes == NULL)
     {
         return INVALID_INPUT;
     }

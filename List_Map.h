@@ -150,7 +150,10 @@ T& List_Map<S, T>::operator[] (const S& key)
 template <class S, class T>
 typename List_Map<S, T>::iterator List_Map<S, T>::erase(iterator pos)
 {
-     Map_Node<S, T>* to_delete = pos.curr;
+    assert(pos != nullptr);
+    Map_Node<S, T>* to_delete = pos.curr;
+    List_Map<S, T>::iterator to_return = ++pos;
+    
     if(to_delete->previous == nullptr) //to_delete is the head
     {
         head = to_delete->next;
@@ -170,14 +173,14 @@ typename List_Map<S, T>::iterator List_Map<S, T>::erase(iterator pos)
     }
 
     delete to_delete;
-    return ++pos;
+    return to_return;
 }
 
 template <class S, class T>
 typename List_Map<S, T>::iterator List_Map<S, T>::erase(const S& key)
 {
     List_Map<S, T>::iterator it = this->begin();
-    for(it ; it!= this->end() && it->key != key; ++it);
+    for(; it!= this->end() && it->key != key; ++it);
     return erase(it);
 }
 

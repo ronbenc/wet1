@@ -2,7 +2,6 @@
 .vscode/
 build/
 main.cpp
-CMakeLists.txt
 *.exe
 *.out
 *.o
