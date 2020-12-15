@@ -3,8 +3,7 @@
 // The data structure is an implementation of a genereic AVL Tree iterator & const_iterator scanning tree in-order, in which T is the generic type.
 
 //***********Assumptions*************
-// The following operators should be available: 
-// No additional assumptions assumed, other than the assumptions in AVL Tree
+// No additional assumptions assumed, other than the assumptions on T as required in AVL Tree
 
 //***********Functionality*************
 
@@ -79,7 +78,7 @@ class AVL_Tree<T>::iterator
 };
 
 template<class T>
-AVL_Tree<T>::iterator::iterator(const AVL_Tree<T>* tree, int index) : tree(tree), index(index), node (tree->findMin()) {}
+AVL_Tree<T>::iterator::iterator(const AVL_Tree<T>* tree, int index) : tree(tree), index(index), node (tree->min) {}
 
 template<class T>
 typename AVL_Tree<T>::iterator AVL_Tree<T>::begin() const
@@ -153,7 +152,7 @@ class AVL_Tree<T>::const_iterator
 };
 
 template<class T>
-AVL_Tree<T>::const_iterator::const_iterator(const AVL_Tree<T>* const tree, int index) : tree(tree), index(index), node(tree->findMin()) {}
+AVL_Tree<T>::const_iterator::const_iterator(const AVL_Tree<T>* const tree, int index) : tree(tree), index(index), node(tree->min) {}
 
 template<class T>
 typename AVL_Tree<T>::const_iterator AVL_Tree<T>::cbegin() const
