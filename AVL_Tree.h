@@ -28,6 +28,14 @@
 //Print to os a given AVL Tree, supports concatenations
 // std::ostream& operator<<(std::ostream& os, const AVL_Tree<T>& tree);
 
+//The function returns an iterator to the minimal element in tree
+// iterator AVL_Tree<T>::begin() const;
+// const_iterator AVL_Tree<T>::cbegin() const;
+
+//The function returns an iterator to the successor of maximal element in tree
+// iterator AVL_Tree<T>::end() const; 
+// const_iterator AVL_Tree<T>::cend() const; 
+
 //***********Example of Use*************
 
 // int main()
@@ -76,10 +84,8 @@ class AVL_Tree
     const TreeNode<T>* constFindPrevPtr(const TreeNode<T>*) const;
     TreeNode<T>* findPrevPtr(TreeNode<T>*) const;
     TreeNode<T>* searchNode(T data);
-
             
-    public:    
-    
+    public:
     AVL_Tree();
     ~AVL_Tree();
     void insertNode(T data);

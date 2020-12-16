@@ -11,8 +11,8 @@
 //***********Functionality*************
 // The following data structure supports the follwing operations:
 
-// Constructor of a map, returns the map by value, default tree is nullptr
-// Map(AVL_Tree<Pair<T,S>>* tree = nullptr);
+// Constructor of a map, returns an empty map
+// Map<T,S>::Map();
 
 //Insert a given key and it's value into the map
 // void Map<T,S>::insert(const T& key, const S& val);
@@ -23,9 +23,16 @@
 //The function returns true if map has at least one value for a given key
 // bool Map<T,S>::contains(const T& key) const;
 
-//The function returns the minimal value of a given key
+//The function returns the minimal value of a given key, only for accessing purposes (not for changing the map)
 // const S& Map<T,S>::operator[] (const T& key) const;
 
+//The function returns iterator to the minimal object in the tree
+// iterator begin() const;
+// const_iterator cbegin() const;
+
+//The function returns iterator to the successor of maximal element in tree
+// iterator end() const; 
+// const_iterator cend() const; 
 
 //Dereference to the element of type pair
 // pair<T,S>& Map<T,S>::iterator::operator*() const;
@@ -55,12 +62,13 @@
 // iterator& Map<T,S>::iterator::operator=(const iterator&);
 // const_iterator& Map<T,S>::const_iterator::operator=(const const_iterator&);
 
+//Printing operator:
+// std::ostream& operator<<(std::ostream& os, const Map<T,S>*& map)
 
 //****************Example of Use****************
 // int main()
 // {
-//     AVL_Tree<Pair<int, int>> tree = AVL_Tree<Pair<int, int>>();    
-//     Map<int, int> map(&tree);
+//     Map<int, int> map;
 //     map.insert(10, 40);
 //     map.insert(10, 38);
 //     map.insert(11, 21);
@@ -75,6 +83,7 @@
 //         tmp = *beg;
 //         ++beg;
 //     }
+//     std::cout << map << std::endl;
 //     return 0;
 // }
 
@@ -98,16 +107,13 @@ class Map
     AVL_Tree<Pair<T, S>> tree;
     TreeNode<Pair<T,S>>* findVal(const T& key) const;
             
-    public:
-    
+    public:    
     Map() = default;
     ~Map() = default;
     void insert(const T& key, const S& val);
     void remove(const T& key);
     bool contains(const T& key) const;
-    const S& operator[] (const T& key) const;
-    const AVL_Tree<Pair<T,S>>* getTree() const;
-    AVL_Tree<Pair<T,S>>* getTree();
+    const S& operator[] (const T& key) const;    
 
     class iterator;
     iterator begin() const;
@@ -128,7 +134,6 @@ class Map
 //         it++;
 //     }
 // }
-
 
 template<class T, class S>
 void Map<T,S>::insert(const T& key, const S& val)
@@ -182,18 +187,6 @@ const S& Map<T,S>::operator[] (const T& key) const
     return tmp->getData().second;
 }
 
-template<class T, class S>
-const AVL_Tree<Pair<T,S>>* Map<T,S>::getTree() const
-{
-    return &this->tree;
-}
-
-template<class T, class S>
-AVL_Tree<Pair<T,S>>* Map<T,S>::getTree()
-{
-    return this->tree;
-}
-
 //*********************iterator************************************
 template<class T, class S>
 class Map<T,S>::iterator
@@ -201,9 +194,9 @@ class Map<T,S>::iterator
     friend class Map<T,S>;
     typename AVL_Tree<Pair<T,S>>::iterator tree_it;
     explicit iterator(const Map<T,S>* map, int index = 0);
-
-    public:
     iterator() : tree_it(AVL_Tree<Pair<T,S>>::iterator()) {};
+
+    public:    
     Pair<T,S>& operator*() const;
     iterator& operator++();
     iterator operator++(int);    
@@ -283,9 +276,9 @@ class Map<T,S>::const_iterator
     friend class Map<T,S>;
     typename AVL_Tree<Pair<T,S>>::const_iterator tree_it;
     explicit const_iterator(const Map<T,S>* map, int index = 0);
-
-    public:    
     const_iterator() : tree_it(AVL_Tree<Pair<T,S>>::const_iterator()) {};
+
+    public:        
     const Pair<T,S>& operator*() const;
     const_iterator& operator++();
     const_iterator operator++(int);    
@@ -319,7 +312,7 @@ typename Map<T,S>::const_iterator Map<T,S>::cbegin() const
 template<class T, class S>
 typename Map<T,S>::const_iterator Map<T,S>::cend() const
 {
-    return const_iterator(this, this->getTree()->getSize());
+    return const_iterator(this, this->tree.getSize());    
 }
 
 template<class T, class S>

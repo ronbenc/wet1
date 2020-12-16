@@ -1,6 +1,7 @@
 #ifndef WET1_Pair_H
 #define WET1_Pair_H
 
+#include <iostream>
 template <class S, class T>
 class Pair
 {
@@ -26,6 +27,15 @@ public:
 
     bool operator<(const Pair<S,T>& rhs) const;
 };
+
+//Assumptions on S: operator<< defined
+//Assumptions on T: operator<< defined
+template<class T, class S>
+std::ostream& operator<<(std::ostream& os, const Pair<S,T>& pair)
+{
+    os << "<" << pair.first << "," << pair.second << ">";
+    return os;
+}
 
 //Assumptions on S: == operator defined
 //Assumptions on T: if lhs.first == rhs.first, == operator defined
