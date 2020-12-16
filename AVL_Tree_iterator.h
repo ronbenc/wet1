@@ -55,6 +55,7 @@
 #include <algorithm>
 #include "TreeNode.h"
 #include "AVL_Tree.h"
+#include "Exceptions.h"
 
 //*****************Iterator**********************
 template<class T>
@@ -84,19 +85,27 @@ AVL_Tree<T>::iterator::iterator(const AVL_Tree<T>* tree, int index) : tree(tree)
 template<class T>
 typename AVL_Tree<T>::iterator AVL_Tree<T>::begin() const
 {
+    if(!this)
+    {
+        throw IllegalArgument_AVL_Tree();
+    }
     return iterator(this, 0);
 }
 
 template<class T>
 typename AVL_Tree<T>::iterator AVL_Tree<T>::end() const
 {
+    if(!this)
+    {
+        throw IllegalArgument_AVL_Tree();
+    }
     return iterator(this, this->size);
 }
 
 template<class T>
 T& AVL_Tree<T>::iterator::operator*() const
 {
-    if(!this || index >= this->tree->size)
+    if(!this || !this->node || index >= this->tree->size)
     {
         throw IllegalArgument_AVL_Tree();
     }
@@ -171,9 +180,9 @@ typename AVL_Tree<T>::const_iterator AVL_Tree<T>::cend() const
 template<class T>
 const T& AVL_Tree<T>::const_iterator::operator*() const
 {
-    if(index >= this->tree->size)
+    if(!this || !this->node || index >= this->tree->size)
     {
-        //throw exception
+        throw IllegalArgument_AVL_Tree();
     }
     return this->node->getData();
 }
@@ -181,8 +190,7 @@ const T& AVL_Tree<T>::const_iterator::operator*() const
 template<class T>
 typename AVL_Tree<T>::const_iterator& AVL_Tree<T>::const_iterator::operator++ () 
 {
-    ++index;
-    
+    ++index;    
     node = tree->constFindNextPtr(node);
     return *this;
 }

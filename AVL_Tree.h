@@ -58,6 +58,7 @@
 #include <cassert>
 #include <algorithm>
 #include "TreeNode.h"
+#include "Exceptions.h"
 
 template<class T>
 class AVL_Tree
@@ -148,24 +149,37 @@ void AVL_Tree<T>::deleteTree(TreeNode<T>* root)
 template <class T>
 TreeNode<T>* AVL_Tree<T>::getRoot()
 {
+    if(!this)
+    {
+        throw IllegalArgument_AVL_Tree();
+    }
     return this->root;
 }
 
 template <class T>
 TreeNode<T>* AVL_Tree<T>::getRoot() const
 {
+    if(!this)
+    {
+        throw IllegalArgument_AVL_Tree();
+    }
     return this->root;
 }
 
 template<class T>
 int AVL_Tree<T>::getSize() const
 {
+    if(!this)
+    {
+        return 0;
+    }
     return this->size;
 }
 
 template<class T>
 TreeNode<T>* AVL_Tree<T>::llrotation(TreeNode<T>* vertex)
 {
+    assert(vertex);
     TreeNode<T>* new_root = vertex->getLeft();
     TreeNode<T>* prev_root = vertex;
     TreeNode<T>* prev_parent = vertex->getParent();
@@ -193,6 +207,7 @@ TreeNode<T>* AVL_Tree<T>::llrotation(TreeNode<T>* vertex)
 template <class T>
 TreeNode<T>* AVL_Tree<T>::rrrotation(TreeNode<T>* vertex)
 {
+    assert(vertex);
     TreeNode<T>* new_root = vertex->getRight();
     TreeNode<T>* prev_root = vertex;
     TreeNode<T>* prev_parent = vertex->getParent();
@@ -220,6 +235,7 @@ TreeNode<T>* AVL_Tree<T>::rrrotation(TreeNode<T>* vertex)
 template<class T>
 TreeNode<T>* AVL_Tree<T>:: lrrotation(TreeNode<T>* vertex)
 {
+    assert(vertex);
     TreeNode<T>* new_root = vertex->getLeft()->getRight();
     TreeNode<T>* prev_root = vertex;
     TreeNode<T>* prev_parent = vertex->getParent();
@@ -249,6 +265,7 @@ TreeNode<T>* AVL_Tree<T>:: lrrotation(TreeNode<T>* vertex)
 template<class T>
 TreeNode<T>* AVL_Tree<T>::rlrotation(TreeNode<T>* vertex)
 {
+    assert(vertex);
     TreeNode<T>* new_root = vertex->getRight()->getLeft();
     TreeNode<T>* prev_root = vertex;
     TreeNode<T>* prev_parent = vertex->getParent();
@@ -278,6 +295,7 @@ TreeNode<T>* AVL_Tree<T>::rlrotation(TreeNode<T>* vertex)
 template <class T>
 TreeNode<T>* AVL_Tree<T>::findMin() const
 {
+    assert(this);
     TreeNode<T>* node = this->getRoot();
     while(node->getLeft())
     {        
@@ -289,6 +307,7 @@ TreeNode<T>* AVL_Tree<T>::findMin() const
 template <class T>
 TreeNode<T>* AVL_Tree<T>::findMax() const
 {
+    assert(this);
     TreeNode<T>* node = this->getRoot();
     while(node->getRight())
     {        
@@ -300,7 +319,8 @@ TreeNode<T>* AVL_Tree<T>::findMax() const
 template<class T>
 void AVL_Tree<T>::insert(T data, TreeNode<T>* vertex)
 {
-	if(data == vertex->getData())
+	assert(vertex);
+    if(data == vertex->getData())
     {
         return;
     }
@@ -331,6 +351,10 @@ void AVL_Tree<T>::insert(T data, TreeNode<T>* vertex)
 template<class T>
 void AVL_Tree<T>::insertNode(T data)
 {
+    if(!this)
+    {
+        throw IllegalArgument_AVL_Tree();
+    }
     if(root) 
     {
         this->insert(data, root);
@@ -355,6 +379,7 @@ void AVL_Tree<T>::insertNode(T data)
 template <class T>
 void AVL_Tree<T>::BalanceCheck(TreeNode<T>* leaf, bool single_rotate)
 {
+    assert(this && leaf);
     TreeNode<T>* vertex = leaf;
     this->heightUpdate(leaf);
     while(vertex)
@@ -416,6 +441,7 @@ void AVL_Tree<T>::heightUpdate(TreeNode<T>* node)
 template <class T>
 TreeNode<T>* AVL_Tree<T>::searchNode(T data)
 {
+    assert(this);
     TreeNode<T>* node_ptr = this->getRoot();
     while (node_ptr)
     {
@@ -438,6 +464,7 @@ TreeNode<T>* AVL_Tree<T>::searchNode(T data)
 template<class T>
 void AVL_Tree<T>::removeNode(T data)
 {
+    assert(this);
     TreeNode<T>* curr = this->searchNode(data);
     if (!curr) {return;}
     TreeNode<T>* curr_parent = curr->getParent();
@@ -513,6 +540,7 @@ bool AVL_Tree<T>::contains(T data)
 template<class T>
 const TreeNode<T>* AVL_Tree<T>::constFindNextPtr(const TreeNode<T>* node) const
 {
+    assert(node);
     if(node->getRight()) // if node has a right son, find min of sub-tree rooted by right son
     {
         const TreeNode<T>* sub_root = node->getRight();
@@ -547,6 +575,7 @@ const TreeNode<T>* AVL_Tree<T>::constFindNextPtr(const TreeNode<T>* node) const
 template<class T>
 TreeNode<T>* AVL_Tree<T>::findNextPtr(TreeNode<T>* node) const
 {
+    assert(node);
     if(node->getRight()) // if node has a right son, find min of sub-tree rooted by right son
     {
         TreeNode<T>* sub_root = node->getRight();
@@ -581,6 +610,7 @@ TreeNode<T>* AVL_Tree<T>::findNextPtr(TreeNode<T>* node) const
 template<class T>
 const TreeNode<T>* AVL_Tree<T>::constFindPrevPtr(const TreeNode<T>* node) const
 {
+    assert(node);
     if(node->getLeft()) // if node has a left son, find max of sub-tree rooted by left son
     {
         TreeNode<T>* sub_root = node->getLeft();
@@ -615,6 +645,7 @@ const TreeNode<T>* AVL_Tree<T>::constFindPrevPtr(const TreeNode<T>* node) const
 template<class T>
 TreeNode<T>* AVL_Tree<T>::findPrevPtr(TreeNode<T>* node) const
 {
+    assert(node);
     if(node->getLeft()) // if node has a left son, find max of sub-tree rooted by left son
     {
         TreeNode<T>* sub_root = node->getLeft();

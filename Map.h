@@ -100,6 +100,7 @@
 #include "AVL_Tree.h"
 #include "AVL_Tree_iterator.h"
 #include "Pair.h"
+#include "Exceptions.h"
 
 template<class T, class S>
 class Map
@@ -123,17 +124,17 @@ class Map
     const_iterator cend() const; 
 };
 
-//the function will be available only after integrating with pair class by Ron
-// template<class T, class S>
-// std::ostream& operator<<(std::ostream& os, const Map<T,S>*& map)
-// {
-//     Map<T,S>::iterator it = map->begin();
-//     while(it != map.end())
-//     {
-//         os << (*it) << std::endl;
-//         it++;
-//     }
-// }
+//Printing operator for a map
+template<class T, class S>
+std::ostream& operator<<(std::ostream& os, const Map<T,S>& map)
+{
+    Map<T,S>::iterator it = map->begin();
+    while(it != map.end())
+    {
+        os << (*it) << std::endl;
+        it++;
+    }
+}
 
 template<class T, class S>
 void Map<T,S>::insert(const T& key, const S& val)
@@ -145,6 +146,7 @@ template<class T, class S>
 void Map<T,S>::remove(const T& key)
 {
     TreeNode<Pair<T,S>>* node = this->findVal(key);
+    if(!node) {return;}    
     tree.removeNode(node->getData());
 }
 
@@ -181,7 +183,7 @@ const S& Map<T,S>::operator[] (const T& key) const
 {
     if(!this->contains(key))
     {
-        //throw excpetion
+        throw IllegalArgument_Map();
     }
     const TreeNode<Pair<T,S>>* tmp = this->findVal(key);
     return tmp->getData().second;
@@ -210,6 +212,10 @@ class Map<T,S>::iterator
 template<class T, class S>
 Map<T,S>::iterator::iterator(const Map<T,S>* map, int index)
 {
+    if(!map)
+    {
+        throw IllegalArgument_Map();
+    }
     if(index == map->tree.getSize())
     {
         tree_it = map->tree.end();
@@ -292,6 +298,10 @@ class Map<T,S>::const_iterator
 template<class T, class S>
 Map<T,S>::const_iterator::const_iterator(const Map<T,S>* map, int index)
 {
+    if(!map)
+    {
+        throw IllegalArgument_Map();
+    }
     if(index == map->tree.getSize())
     {
         tree_it = map->tree.cend();

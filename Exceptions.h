@@ -31,4 +31,14 @@ class IllegalArgument_AVL_Tree : public AVL_TreeException
     }
 };
 
+class MapException : public Exception {};
+
+class IllegalArgument_Map : public MapException 
+{
+    const char* what() noexcept
+    {
+        return "Error: illegal argument under Map class";
+    }
+};
+
 #endif //WET1_EXCEPTION_H
