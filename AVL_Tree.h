@@ -58,6 +58,8 @@ class AVL_Tree
     TreeNode<T>* root;
     TreeNode<T>* min;
     int size;
+    AVL_Tree(TreeNode<T>* r);//used to be public - itay 161220 debug
+    
     void BalanceCheck(TreeNode<T>* leaf, bool single_rotate);
     TreeNode<T>* llrotation(TreeNode<T>* vertex);
     TreeNode<T>* rrrotation(TreeNode<T>* vertex);
@@ -74,9 +76,11 @@ class AVL_Tree
     const TreeNode<T>* constFindPrevPtr(const TreeNode<T>*) const;
     TreeNode<T>* findPrevPtr(TreeNode<T>*) const;
     TreeNode<T>* searchNode(T data);
+
             
     public:    
-    explicit AVL_Tree(TreeNode<T>* r = nullptr);
+    // AVL_Tree(TreeNode<T>* r);
+    AVL_Tree();
     ~AVL_Tree();
     void insertNode(T data);
     void removeNode(T data);
@@ -103,18 +107,28 @@ std::ostream& operator<< (std::ostream& os, const AVL_Tree<T>& tree)
 template<class T>
 AVL_Tree<T>::AVL_Tree(TreeNode<T>* r)
 {
-    if(!r) 
-    {
-        root = nullptr;
-        min = nullptr;
-        size = 0;        
-    }
-    else 
-    {
+    assert(r);
+    // if(!r) 
+    // {
+    //     root = nullptr;
+    //     min = nullptr;
+    //     size = 0;        
+    // }
+    // else 
+    // {
         root = r;
         min = root;
         size = 1;
-    }
+    // }
+}
+
+//itay check if caued proiblem 161220 1647
+template <class T>
+AVL_Tree<T>::AVL_Tree()
+{
+    root = nullptr;
+    min = nullptr;
+    size = 0;
 }
 
 template<class T>
@@ -343,6 +357,7 @@ template <class T>
 void AVL_Tree<T>::BalanceCheck(TreeNode<T>* leaf, bool single_rotate)
 {
     TreeNode<T>* vertex = leaf;
+    this->heightUpdate(leaf);
     while(vertex)
     {
         if(vertex->getBF() == 2)

@@ -297,7 +297,7 @@ bool operator!= (const TreeNode<T>& a, const TreeNode<T>& b)
 template<class T>
 bool operator< (const TreeNode<T>& a, const TreeNode<T>& b)
 {
-    return (a.getData () < b.getData());
+    return (a.getData() < b.getData());
 }
 
 template<class T>
