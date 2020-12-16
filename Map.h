@@ -95,7 +95,7 @@
 template<class T, class S>
 class Map
 {
-    AVL_Tree<Pair<T,S>>* tree;
+    AVL_Tree<Pair<T, S>> tree;
     TreeNode<Pair<T,S>>* findVal(const T& key) const;
             
     public:
@@ -103,8 +103,8 @@ class Map
     // Map(AVL_Tree<Pair<T,S>>* tree = nullptr) : tree(tree) {}
     //Itay - trying to build a map without arguments
     // explicit Map(AVL_Tree<Pair<T,S>>* tree = AVL_Tree<Pair<T,S>>* tree()) : tree(tree) {}
-    explicit Map(AVL_Tree<Pair<T,S>>* tree) : tree(tree) {};
-    Map();
+    //explicit Map(AVL_Tree<Pair<T,S>>* tree) : tree(tree) {};
+    Map() = default;
     ~Map() = default;
     void insert(const T& key, const S& val);
     void remove(const T& key);
@@ -133,18 +133,11 @@ class Map
 //     }
 // }
 
-template<class T, class S>
-Map<T,S>::Map()
-{
-    AVL_Tree<Pair<T,S>> tmp = AVL_Tree<Pair<T,S>>();
-    this->tree = &tmp;
-}
 
 template<class T, class S>
 void Map<T,S>::insert(const T& key, const S& val)
 {
-    Pair<T,S> pair(key, val);
-    // this->tree->insertNode(pair);
+    tree.insertNode(Pair<T,S>(key, val));
 }
 
 template<class T, class S>

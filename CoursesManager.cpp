@@ -34,7 +34,7 @@ void CoursesManager::RemoveCourse(const int courseID)
       if(to_remove.classes_array[classID] != stl_most_viewed.end())
       {
         List_Map<int, ClassesTree>::iterator curr_time_it = to_remove.classes_array[classID];
-        curr_time_it->value.erase((courseID, classID));
+        curr_time_it->value.erase(Pair<int, int>(courseID, classID));
 
         if(curr_time_it->value.empty())
         {
