@@ -76,7 +76,7 @@ class AVL_Tree
     TreeNode<T>* searchNode(T data);
             
     public:    
-    AVL_Tree(TreeNode<T>* r = nullptr);
+    explicit AVL_Tree(TreeNode<T>* r = nullptr);
     ~AVL_Tree();
     void insertNode(T data);
     void removeNode(T data);

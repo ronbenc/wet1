@@ -71,6 +71,8 @@ Pair<S, T>& Pair<S, T>::operator=(const Pair<S,T>& other)
 {
     first = other.first;
     second = other.second;
+    //added by Itay - debug
+    return *this;
 }
 
 template <class S, class T>
