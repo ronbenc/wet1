@@ -100,10 +100,6 @@ class Map
             
     public:
     
-    // Map(AVL_Tree<Pair<T,S>>* tree = nullptr) : tree(tree) {}
-    //Itay - trying to build a map without arguments
-    // explicit Map(AVL_Tree<Pair<T,S>>* tree = AVL_Tree<Pair<T,S>>* tree()) : tree(tree) {}
-    //explicit Map(AVL_Tree<Pair<T,S>>* tree) : tree(tree) {};
     Map() = default;
     ~Map() = default;
     void insert(const T& key, const S& val);
@@ -144,7 +140,7 @@ template<class T, class S>
 void Map<T,S>::remove(const T& key)
 {
     TreeNode<Pair<T,S>>* node = this->findVal(key);
-    tree->removeNode(node->getData()); 
+    tree.removeNode(node->getData());
 }
 
 template<class T, class S>
@@ -156,7 +152,7 @@ bool Map<T,S>::contains(const T& key) const
 template<class T, class S>
 TreeNode<Pair<T,S>>* Map<T,S>::findVal(const T& key) const
 {
-    TreeNode<Pair<T,S>>* node = tree->getRoot();
+    TreeNode<Pair<T,S>>* node = tree.getRoot();
     while(node)
     {
         if(key == node->getData().first)
@@ -189,7 +185,7 @@ const S& Map<T,S>::operator[] (const T& key) const
 template<class T, class S>
 const AVL_Tree<Pair<T,S>>* Map<T,S>::getTree() const
 {
-    return this->tree;
+    return &this->tree;
 }
 
 template<class T, class S>
@@ -220,14 +216,14 @@ class Map<T,S>::iterator
 template<class T, class S>
 Map<T,S>::iterator::iterator(const Map<T,S>* map, int index)
 {
-    if(index == map->tree->getSize())
+    if(index == map->tree.getSize())
     {
-        tree_it = map->tree->end();
+        tree_it = map->tree.end();
     }
     else
     {
         assert(index == 0);
-        tree_it = map->tree->begin();
+        tree_it = map->tree.begin();
     }
 }
 
@@ -240,7 +236,7 @@ typename Map<T,S>::iterator Map<T,S>::begin() const
 template<class T, class S>
 typename Map<T,S>::iterator Map<T,S>::end() const
 {
-    return iterator(this, this->getTree()->getSize());
+    return iterator(this, this->tree.getSize());
 }
 
 template<class T, class S>
@@ -301,14 +297,14 @@ class Map<T,S>::const_iterator
 template<class T, class S>
 Map<T,S>::const_iterator::const_iterator(const Map<T,S>* map, int index)
 {
-    if(index == map->tree->getSize())
+    if(index == map->tree.getSize())
     {
-        tree_it = map->tree->cend();
+        tree_it = map->tree.cend();
     }
     else
     {
         assert(index == 0);
-        tree_it = map->tree->cbegin();
+        tree_it = map->tree.cbegin();
     }
 }
 

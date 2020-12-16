@@ -11,7 +11,7 @@
 // The following data structure supports the follwing operations:
 
 // Constructor of an AVL Tree, returns the tree by value, default root is null
-//AVL_Tree(TreeNode<T>* r = nullptr);
+//AVL_Tree();
 
 // Constructor of an AVL Tree, destroys the tree recursively
 //~AVL_Tree();    
