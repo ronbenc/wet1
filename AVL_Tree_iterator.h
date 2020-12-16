@@ -60,11 +60,11 @@
 template<class T>
 class AVL_Tree<T>::iterator
 {
-    iterator(const AVL_Tree<T>* tree, int index = 0);
+    explicit iterator(const AVL_Tree<T>* tree, int index = 0);
+    friend class AVL_Tree<T>;    
 
     public:
-    iterator() : tree(nullptr), index(0) {};
-    friend class AVL_Tree<T>;    
+    iterator() : tree(nullptr), index(0) {};    
     const AVL_Tree<T>* tree;
     int index;
     TreeNode<T>* node;
@@ -80,8 +80,6 @@ class AVL_Tree<T>::iterator
 
 template<class T>
 AVL_Tree<T>::iterator::iterator(const AVL_Tree<T>* tree, int index) : tree(tree), index(index), node (tree->min) {}
-//problem detected - if we do not iterate from the beginning node is not tree->min itay
-//irrelevant because data structure allows accessing map only by begin func
 
 template<class T>
 typename AVL_Tree<T>::iterator AVL_Tree<T>::begin() const
@@ -137,11 +135,12 @@ bool AVL_Tree<T>::iterator::operator!= (const AVL_Tree<T>::iterator& a) const
 template<class T>
 class AVL_Tree<T>::const_iterator
 {
-    const_iterator(const AVL_Tree<T>* const tree, int index);
+    explicit const_iterator(const AVL_Tree<T>* const tree, int index = 0);
     friend class AVL_Tree<T>;
 
     public:
-    const AVL_Tree<T>* const tree;
+    const_iterator() : tree(nullptr), index(0) {};
+    const AVL_Tree<T>* tree;
     int index;
     const TreeNode<T>* node;
     const T& operator*() const;
