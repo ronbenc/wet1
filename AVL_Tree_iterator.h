@@ -60,8 +60,10 @@
 template<class T>
 class AVL_Tree<T>::iterator
 {
+    iterator(const AVL_Tree<T>* tree, int index = 0);
+
     public:
-    iterator(const AVL_Tree<T>* tree, int index);
+    iterator() : tree(nullptr), index(0) {};
     friend class AVL_Tree<T>;    
     const AVL_Tree<T>* tree;
     int index;
@@ -79,7 +81,7 @@ class AVL_Tree<T>::iterator
 template<class T>
 AVL_Tree<T>::iterator::iterator(const AVL_Tree<T>* tree, int index) : tree(tree), index(index), node (tree->min) {}
 //problem detected - if we do not iterate from the beginning node is not tree->min itay
-
+//irrelevant because data structure allows accessing map only by begin func
 
 template<class T>
 typename AVL_Tree<T>::iterator AVL_Tree<T>::begin() const
@@ -96,9 +98,9 @@ typename AVL_Tree<T>::iterator AVL_Tree<T>::end() const
 template<class T>
 T& AVL_Tree<T>::iterator::operator*() const
 {
-    if(index >= this->tree->size)
+    if(!this || index >= this->tree->size)
     {
-        //throw exception
+        throw IllegalArgument_AVL_Tree();
     }
     return this->node->getData();
 }
