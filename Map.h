@@ -128,12 +128,13 @@ class Map
 template<class T, class S>
 std::ostream& operator<<(std::ostream& os, const Map<T,S>& map)
 {
-    Map<T,S>::iterator it = map->begin();
+    typename Map<T,S>::iterator it = map.begin();
     while(it != map.end())
     {
         os << (*it) << std::endl;
         it++;
     }
+    return os;
 }
 
 template<class T, class S>
