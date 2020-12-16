@@ -58,7 +58,7 @@ class AVL_Tree
     TreeNode<T>* root;
     TreeNode<T>* min;
     int size;
-    AVL_Tree(TreeNode<T>* r);//used to be public - itay 161220 debug
+    AVL_Tree(TreeNode<T>* r);
     
     void BalanceCheck(TreeNode<T>* leaf, bool single_rotate);
     TreeNode<T>* llrotation(TreeNode<T>* vertex);
@@ -79,7 +79,7 @@ class AVL_Tree
 
             
     public:    
-    // AVL_Tree(TreeNode<T>* r);
+    
     AVL_Tree();
     ~AVL_Tree();
     void insertNode(T data);
@@ -108,21 +108,11 @@ template<class T>
 AVL_Tree<T>::AVL_Tree(TreeNode<T>* r)
 {
     assert(r);
-    // if(!r) 
-    // {
-    //     root = nullptr;
-    //     min = nullptr;
-    //     size = 0;        
-    // }
-    // else 
-    // {
-        root = r;
-        min = root;
-        size = 1;
-    // }
+    root = r;
+    min = root;
+    size = 1;
 }
 
-//itay check if caued proiblem 161220 1647
 template <class T>
 AVL_Tree<T>::AVL_Tree()
 {
@@ -140,7 +130,10 @@ AVL_Tree<T>::~AVL_Tree()
 template<class T>
 void AVL_Tree<T>::deleteTree(TreeNode<T>* root)
 {
-    if(!root) {return;}
+    if(!root) 
+    {
+        return;
+    }
     deleteTree(root->getLeft());
     deleteTree(root->getRight());
     delete root;    
@@ -510,6 +503,7 @@ bool AVL_Tree<T>::contains(T data)
     return (this->searchNode(data) ? true : false);
 }
 
+//Helper function that returns a ptr to the next node (in order)
 template<class T>
 const TreeNode<T>* AVL_Tree<T>::constFindNextPtr(const TreeNode<T>* node) const
 {
@@ -543,6 +537,7 @@ const TreeNode<T>* AVL_Tree<T>::constFindNextPtr(const TreeNode<T>* node) const
     }
 }
 
+//helper function that returns a ptr to the previous node (in order)
 template<class T>
 TreeNode<T>* AVL_Tree<T>::findNextPtr(TreeNode<T>* node) const
 {
@@ -576,6 +571,7 @@ TreeNode<T>* AVL_Tree<T>::findNextPtr(TreeNode<T>* node) const
     }
 }
 
+//Helper function that returns a ptr to the next node (in order)
 template<class T>
 const TreeNode<T>* AVL_Tree<T>::constFindPrevPtr(const TreeNode<T>* node) const
 {
@@ -609,6 +605,7 @@ const TreeNode<T>* AVL_Tree<T>::constFindPrevPtr(const TreeNode<T>* node) const
     }
 }
 
+//Helper function that returns a ptr to the previous node (in order)
 template<class T>
 TreeNode<T>* AVL_Tree<T>::findPrevPtr(TreeNode<T>* node) const
 {

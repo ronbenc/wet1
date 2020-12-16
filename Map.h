@@ -202,7 +202,8 @@ class Map<T,S>::iterator
     typename AVL_Tree<Pair<T,S>>::iterator tree_it;
     explicit iterator(const Map<T,S>* map, int index = 0);
 
-    public:    
+    public:
+    iterator() : tree_it(AVL_Tree<Pair<T,S>>::iterator()) {};
     Pair<T,S>& operator*() const;
     iterator& operator++();
     iterator operator++(int);    
@@ -284,6 +285,7 @@ class Map<T,S>::const_iterator
     explicit const_iterator(const Map<T,S>* map, int index = 0);
 
     public:    
+    const_iterator() : tree_it(AVL_Tree<Pair<T,S>>::const_iterator()) {};
     const Pair<T,S>& operator*() const;
     const_iterator& operator++();
     const_iterator operator++(int);    

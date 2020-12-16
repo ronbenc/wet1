@@ -171,7 +171,7 @@ int TreeNode<T>::getHeight()
 }
 
 template<class T>
-const T& TreeNode<T>::getData() const // itay changed from T to const T& 151220 1053 - debug
+const T& TreeNode<T>::getData() const
 {
     if(!this) 
     {
