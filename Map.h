@@ -107,7 +107,7 @@ class Map
 {
     AVL_Tree<Pair<T, S>> tree;
     TreeNode<Pair<T,S>>* findVal(const T& key) const;
-    S& operator[] (const T& key); 
+    //S& operator[] (const T& key); 
     AVL_Tree<Pair<T, S>>* getTree()
     {
         return &this->tree;
@@ -121,6 +121,8 @@ class Map
     void insert(const T& key, const S& val);
     void remove(const T& key);
     bool contains(const T& key) const;
+
+    S& operator[] (const T& key); 
     const S& operator[] (const T& key) const;
 
     class iterator;
@@ -365,7 +367,7 @@ typename Map<T,S>::const_iterator& Map<T,S>::const_iterator::operator++()
 template<class T, class S>
 typename Map<T,S>::const_iterator Map<T,S>::const_iterator::operator++(int) 
 {
-    iterator result = *this;
+    const_iterator result = *this;
     ++(*this);
     return result;
 }

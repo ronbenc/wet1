@@ -4,10 +4,11 @@
 #include "Pair.h"
 #include "List_Map.h"
 #include "Avoided.h"
-#include <set>
-#include <map>
+#include "AVL_Tree.h"
+#include "AVL_Tree_iterator.h"
+#include "Map.h"
 
-typedef std::set<Pair<int, int>> ClassesTree;
+typedef AVL_Tree<Pair<int, int>> ClassesTree;
 
 class CourseData
 {
@@ -18,7 +19,21 @@ public:
 
     CourseData(const int num_of_classes = 0);
     CourseData(const CourseData& to_copy);
+    bool operator<(const CourseData& rhs) const
+    {
+        return true;
+    }
+
+    bool operator==(const CourseData& rhs) const
+    {
+        return true;
+    }
+    bool operator<=(const CourseData& rhs) const
+    {
+        return true;
+    }
     ~CourseData();
 };
+
 
 #endif //WET1_COURSE_DATA_H

@@ -88,8 +88,12 @@ Pair<S, T>& Pair<S, T>::operator=(const Pair<S,T>& other)
 template <class S, class T>
 bool Pair<S, T>::operator<(const Pair<S,T>& rhs) const
 {
-    return ((this->first < rhs.first) || (this->first  == rhs.first && this->second < rhs.second));
-    //return (*this) < rhs;
+    if (this->first < rhs.first) 
+    {
+        return true;
+    }
+
+    else return (this->first  == rhs.first && this->second < rhs.second);
 }
 
 template <class S, class T>

@@ -143,7 +143,7 @@ void AVL_Tree<T>::deleteTree(TreeNode<T>* tmp_root)
     }
     deleteTree(tmp_root->getLeft());
     deleteTree(tmp_root->getRight());
-    delete tmp_root;    
+    //delete tmp_root;    
 }
 
 template <class T>

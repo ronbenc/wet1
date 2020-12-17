@@ -3,15 +3,17 @@
 
 #include "CourseData.h"
 #include "AVL_Tree.h"
+#include "AVL_Tree_iterator.h"
+#include "Map.h"
 #include "Exceptions.h"
 
-typedef std::set<Pair<int, int>> ClassesTree;
+typedef AVL_Tree<Pair<int, int>> ClassesTree;
 
 class CoursesManager
 {
 private:
-    List_Map<int, ClassesTree> stl_most_viewed;
-    std::map<int const, CourseData> stl_course_map;
+    List_Map<int, ClassesTree> most_viewed;
+    Map<int const, CourseData> course_map;
 
 public:
     CoursesManager() = default;
