@@ -1,5 +1,5 @@
 #include "CourseData.h"
-//
+
 CourseData::CourseData(const int num_of_classes) : num_of_classes(num_of_classes), zero_viewing_time(num_of_classes), classes_array(new List_Map<int, ClassesTree>::iterator[num_of_classes]) {}
 
 CourseData::CourseData(const CourseData& to_copy) : num_of_classes(to_copy.num_of_classes), zero_viewing_time(to_copy.zero_viewing_time), classes_array(new List_Map<int, ClassesTree>::iterator[num_of_classes])
