@@ -14,10 +14,10 @@
 // Constructor of a map, returns an empty map
 // Map<T,S>::Map();
 
-//Insert a given key and it's value into the map
+//If the given key does not show in the map, insert the given key and it's value into the map
 // void Map<T,S>::insert(const T& key, const S& val);
 
-//Remove a given key and it's minimal value from the map
+//Remove a given key and it's value from the map
 // void Map<T,S>::remove(const T& key);
 
 //The function returns true if map has at least one value for a given key
@@ -107,14 +107,21 @@ class Map
 {
     AVL_Tree<Pair<T, S>> tree;
     TreeNode<Pair<T,S>>* findVal(const T& key) const;
+    S& operator[] (const T& key); 
+    AVL_Tree<Pair<T, S>>* getTree()
+    {
+        return &this->tree;
+    }       
+    
             
-    public:    
+    public:     
+    
     Map() = default;
     ~Map() = default;
     void insert(const T& key, const S& val);
     void remove(const T& key);
     bool contains(const T& key) const;
-    const S& operator[] (const T& key) const;    
+    const S& operator[] (const T& key) const;
 
     class iterator;
     iterator begin() const;
@@ -140,7 +147,10 @@ std::ostream& operator<<(std::ostream& os, const Map<T,S>& map)
 template<class T, class S>
 void Map<T,S>::insert(const T& key, const S& val)
 {
-    tree.insertNode(Pair<T,S>(key, val));
+    if(!this->contains(key))
+    {
+        tree.insertNode(Pair<T,S>(key, val));
+    }        
 }
 
 template<class T, class S>
@@ -187,6 +197,17 @@ const S& Map<T,S>::operator[] (const T& key) const
         throw IllegalArgument_Map();
     }
     const TreeNode<Pair<T,S>>* tmp = this->findVal(key);
+    return tmp->getData().second;
+}
+
+template<class T, class S>
+S& Map<T,S>::operator[] (const T& key)
+{
+    if(!this->contains(key))
+    {
+        throw IllegalArgument_Map();
+    }
+    TreeNode<Pair<T,S>>* tmp = this->findVal(key);    
     return tmp->getData().second;
 }
 

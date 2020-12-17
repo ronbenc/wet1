@@ -135,15 +135,15 @@ AVL_Tree<T>::~AVL_Tree()
 }
 
 template<class T>
-void AVL_Tree<T>::deleteTree(TreeNode<T>* root)
+void AVL_Tree<T>::deleteTree(TreeNode<T>* tmp_root)
 {
-    if(!root) 
+    if(!tmp_root) 
     {
         return;
     }
-    deleteTree(root->getLeft());
-    deleteTree(root->getRight());
-    delete root;    
+    deleteTree(tmp_root->getLeft());
+    deleteTree(tmp_root->getRight());
+    delete tmp_root;    
 }
 
 template <class T>
@@ -471,7 +471,7 @@ void AVL_Tree<T>::removeNode(T data)
     TreeNode<T>* toBalance = nullptr;
     if(data == min->getData())
     {
-        min = min->getParent();
+        min = this->findNextPtr(min);
     }
     if(!curr->getLeft() && !curr->getRight())   //case 1: has no children
     {
@@ -485,20 +485,39 @@ void AVL_Tree<T>::removeNode(T data)
         }        
         delete curr;
     }
-    else if(curr->getLeft() && curr->getLeft()) //case 2: has two children
+    else if(curr->getLeft() && curr->getRight()) //case 2: has two children
     {
         TreeNode<T>* node = curr->getRight();
         while(node->getLeft())
         {
             node = node->getLeft();
         }
-        TreeNode<T>* successor = node; //find the desired node to switch with deleted node
-        T val = successor->getData();
-        curr->setData(val); //set data in the node which was removed to desired data
-        toBalance = curr;
-        //delete successor and it's right child (successor has only 1 right child at most, and child is a leaf)
-        delete successor->getRight();
-        delete successor;                
+        TreeNode<T>* successor = node; //find the desired node to place instead of the deleted node
+        successor->setLeft(curr->getLeft());    
+        if(successor->getParent() != curr) // successor is not son of curr
+        {
+            successor->getParent()->setLeft(successor->getRight());
+            assert(curr->getRight() != successor);
+            successor->setRight(curr->getRight());
+        }
+        bool isLeftSon = curr->isLeftSon();
+        delete curr;
+        if(curr_parent)
+        {
+            if(isLeftSon)
+            {
+                curr_parent->setLeft(successor);
+            }
+            else
+            {
+                curr_parent->setRight(successor);
+            }
+        }
+        else
+        {
+            root = successor;
+        }
+        root->setParent(nullptr);
     }
     else // case 3: has one child
     {

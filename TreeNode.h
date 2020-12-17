@@ -20,6 +20,8 @@ class TreeNode
 
     explicit TreeNode(T = T(), TreeNode<T>* left = nullptr, TreeNode<T>* right = nullptr, TreeNode<T>* parent = nullptr);
     ~TreeNode();
+    bool isLeftSon();
+    bool isRightSon();
     void heightCalc();
     int getBF();
     T& getData();
@@ -94,6 +96,28 @@ TreeNode<T>::~TreeNode()
             parent->setRight(nullptr);
         }
     }    
+}
+
+template<class T>
+bool TreeNode<T>::isLeftSon()
+{
+    TreeNode<T>* parent = this->getParent();
+    if(parent && (parent->getLeft() == this))
+    {
+        return true;
+    }
+    return false;
+}
+
+template<class T>
+bool TreeNode<T>::isRightSon()
+{
+    TreeNode<T>* parent = this->getParent();
+    if(parent && (parent->getRight() == this))
+    {
+        return true;
+    }
+    return false;
 }
 
 template<class T>
