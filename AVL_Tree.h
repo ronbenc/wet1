@@ -141,9 +141,12 @@ void AVL_Tree<T>::deleteTree(TreeNode<T>* tmp_root)
     {
         return;
     }
+    assert(tmp_root != nullptr);
     deleteTree(tmp_root->getLeft());
     deleteTree(tmp_root->getRight());
-    //delete tmp_root;    
+    assert(tmp_root != nullptr);
+    assert(tmp_root->getLeft() == nullptr && tmp_root->getRight() == nullptr);
+    delete tmp_root;    
 }
 
 template <class T>
