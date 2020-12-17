@@ -72,12 +72,12 @@ std::ostream& operator<<(std::ostream&, const TreeNode<T>&);
 //**********************in-class functions' implementations**********************
 
 template<class T>
-TreeNode<T>::TreeNode(T input, TreeNode<T>* left, TreeNode<T>* right, TreeNode<T>* parent) : data(input)
+TreeNode<T>::TreeNode(T input, TreeNode<T>* left, TreeNode<T>* right, TreeNode<T>* parent) : data(input), l(left), r(right), p(parent)
 {
     //data = input;
-    l = left;
-    r = right;
-    p = parent;
+    // l = left;
+    // r = right;
+    // p = parent;
     this->heightCalc();
 }
 
