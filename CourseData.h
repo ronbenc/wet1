@@ -19,20 +19,11 @@ public:
 
     CourseData(const int num_of_classes = 0);
     CourseData(const CourseData& to_copy);
-    bool operator<(const CourseData& rhs) const
-    {
-        return true;
-    }
-
-    bool operator==(const CourseData& rhs) const
-    {
-        return true;
-    }
-    bool operator<=(const CourseData& rhs) const
-    {
-        return true;
-    }
     ~CourseData();
+
+    bool operator<(const CourseData& rhs) const;
+    bool operator==(const CourseData& rhs) const;
+    bool operator<=(const CourseData& rhs) const;
 };
 
 
