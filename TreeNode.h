@@ -19,7 +19,7 @@ class TreeNode
     public:
 
     explicit TreeNode(T = T(), TreeNode<T>* left = nullptr, TreeNode<T>* right = nullptr, TreeNode<T>* parent = nullptr);
-    ~TreeNode();
+    ~TreeNode() = default;
     bool isLeftSon();
     bool isRightSon();
     void heightCalc();
@@ -74,33 +74,30 @@ std::ostream& operator<<(std::ostream&, const TreeNode<T>&);
 template<class T>
 TreeNode<T>::TreeNode(T input, TreeNode<T>* left, TreeNode<T>* right, TreeNode<T>* parent) : data(input), l(left), r(right), p(parent)
 {
-    //data = input;
-    // l = left;
-    // r = right;
-    // p = parent;
     this->heightCalc();
 }
 
-template<class T>
-TreeNode<T>::~TreeNode()
-{
-    TreeNode<T>* parent = this->getParent();
-    if(parent)
-    {        
-        if(parent->getLeft() == this)
-        {
-            parent->setLeft(nullptr);
-        }
-        else 
-        {
-            parent->setRight(nullptr);
-        }
-    }    
-}
+// template<class T>
+// TreeNode<T>::~TreeNode()
+// {
+//     TreeNode<T>* parent = this->getParent();
+//     if(parent)
+//     {        
+//         if(parent->getLeft() == this)
+//         {
+//             parent->setLeft(nullptr);
+//         }
+//         else 
+//         {
+//             parent->setRight(nullptr);
+//         }
+//     }    
+// }
 
 template<class T>
 bool TreeNode<T>::isLeftSon()
 {
+    if(!this) {return false;}
     TreeNode<T>* parent = this->getParent();
     if(parent && (parent->getLeft() == this))
     {
@@ -112,6 +109,7 @@ bool TreeNode<T>::isLeftSon()
 template<class T>
 bool TreeNode<T>::isRightSon()
 {
+    if(!this) {return false;}
     TreeNode<T>* parent = this->getParent();
     if(parent && (parent->getRight() == this))
     {

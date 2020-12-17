@@ -468,6 +468,7 @@ void AVL_Tree<T>::removeNode(T data)
     TreeNode<T>* curr = this->searchNode(data);
     if (!curr) {return;}
     TreeNode<T>* curr_parent = curr->getParent();
+    bool curr_left_son = curr->isLeftSon();
     TreeNode<T>* toBalance = nullptr;
     if(data == min->getData())
     {
@@ -482,6 +483,14 @@ void AVL_Tree<T>::removeNode(T data)
         else //if curr is root, set root to null
         {
             this->root = nullptr;
+        }
+        if(curr_left_son)
+        {
+            curr_parent->setLeft(nullptr);
+        }
+        else
+        {
+            curr_parent->setRight(nullptr);
         }        
         delete curr;
     }
@@ -496,11 +505,17 @@ void AVL_Tree<T>::removeNode(T data)
         successor->setLeft(curr->getLeft());    
         if(successor->getParent() != curr) // successor is not son of curr
         {
+            assert(successor->getParent());
+            toBalance = successor->getParent();
             successor->getParent()->setLeft(successor->getRight());
             assert(curr->getRight() != successor);
             successor->setRight(curr->getRight());
         }
-        bool isLeftSon = curr->isLeftSon();
+        else
+        {
+            toBalance = successor;
+        }
+        bool isLeftSon = curr->isLeftSon(); 
         delete curr;
         if(curr_parent)
         {
@@ -526,20 +541,20 @@ void AVL_Tree<T>::removeNode(T data)
         {
             if(curr == curr_parent->getLeft())
             {
-                delete curr;
                 curr_parent->setLeft(child);
             }
             else
             {
-                delete curr;
                 curr_parent->setRight(child);
             }
+            delete curr;
             toBalance = curr_parent;
         }
         else
         {
             delete curr;
             root = child;
+            child->setParent(nullptr);
         }
     }
     size--;

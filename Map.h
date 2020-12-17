@@ -108,14 +108,13 @@ class Map
     AVL_Tree<Pair<T, S>> tree;
     TreeNode<Pair<T,S>>* findVal(const T& key) const;
     //S& operator[] (const T& key); 
-    AVL_Tree<Pair<T, S>>* getTree()
+        AVL_Tree<Pair<T, S>>* getTree()
     {
         return &this->tree;
-    }       
-    
-            
+    } 
     public:     
     
+ 
     Map() = default;
     ~Map() = default;
     void insert(const T& key, const S& val);
