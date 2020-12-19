@@ -141,12 +141,40 @@ void AVL_Tree<T>::deleteTree(TreeNode<T>* tmp_root)
     {
         return;
     }
-    assert(tmp_root != nullptr);
+    // if(tmp_root == this->root)
+    // {
+    //     if(tmp_root->getParent())
+    //     {
+    //         if(tmp_root->isLeftSon())
+    //         {
+    //             tmp_root->getParent()->setLeft(nullptr);
+    //         }
+    //         else
+    //         {
+    //             assert(tmp_root->isRightSon());
+    //             tmp_root->getParent()->setRight(nullptr);
+    //         }            
+    //     }
+    //     return;
+    // }
     deleteTree(tmp_root->getLeft());
     deleteTree(tmp_root->getRight());
     assert(tmp_root != nullptr);
-    assert(tmp_root->getLeft() == nullptr && tmp_root->getRight() == nullptr);
-    delete tmp_root;    
+    assert(tmp_root->getLeft() == nullptr && tmp_root->getRight() == nullptr);    
+    TreeNode<T>* tmp_parent = tmp_root->getParent();
+    if(tmp_parent)
+    {
+        if(tmp_root->isLeftSon())
+        {
+            tmp_parent->setLeft(nullptr);
+        }
+        else
+        {
+            assert(tmp_root->isRightSon());
+            tmp_parent->setRight(nullptr);            
+        }
+    }
+    delete tmp_root;
 }
 
 template <class T>
@@ -468,96 +496,101 @@ template<class T>
 void AVL_Tree<T>::removeNode(T data)
 {
     assert(this);
-    TreeNode<T>* curr = this->searchNode(data);
-    if (!curr) {return;}
-    TreeNode<T>* curr_parent = curr->getParent();
-    bool curr_left_son = curr->isLeftSon();
+    TreeNode<T>* toDelete = this->searchNode(data);
+    if (!toDelete) {return;}
+    TreeNode<T>* toDelete_parent = toDelete->getParent();
     TreeNode<T>* toBalance = nullptr;
+    
+    //check if updating minimal element is needed
     if(data == min->getData())
     {
         min = this->findNextPtr(min);
     }
-    if(!curr->getLeft() && !curr->getRight())   //case 1: has no children
+
+    //case 1: has no children
+    if(!toDelete->getLeft() && !toDelete->getRight())   
     {
-        if(curr != root) //if curr is not root, set parent's child ptr to null
+        if(toDelete != root)
         {
-            toBalance = curr_parent;
-        }
-        else //if curr is root, set root to null
-        {
-            this->root = nullptr;
-        }
-        if(curr_left_son)
-        {
-            curr_parent->setLeft(nullptr);
+            assert(toDelete_parent);
+            toBalance = toDelete_parent;
+            if(toDelete->isLeftSon())
+            {
+                toDelete_parent->setLeft(nullptr);
+            }
+            else
+            {
+                toDelete_parent->setRight(nullptr);
+            }
         }
         else
         {
-            curr_parent->setRight(nullptr);
-        }        
-        delete curr;
+            this->root = nullptr;
+        }    
+        delete toDelete;
     }
-    else if(curr->getLeft() && curr->getRight()) //case 2: has two children
+    //case 2: has two children
+    else if(toDelete->getLeft() && toDelete->getRight()) 
     {
-        TreeNode<T>* node = curr->getRight();
+        TreeNode<T>* node = toDelete->getRight();
         while(node->getLeft())
         {
             node = node->getLeft();
         }
         TreeNode<T>* successor = node; //find the desired node to place instead of the deleted node
-        successor->setLeft(curr->getLeft());    
-        if(successor->getParent() != curr) // successor is not son of curr
+        successor->setLeft(toDelete->getLeft());    
+        if(successor->getParent() != toDelete) // successor is not son of toDelete
         {
             assert(successor->getParent());
             toBalance = successor->getParent();
             successor->getParent()->setLeft(successor->getRight());
-            assert(curr->getRight() != successor);
-            successor->setRight(curr->getRight());
+            successor->setRight(toDelete->getRight());
         }
         else
         {
             toBalance = successor;
         }
-        bool isLeftSon = curr->isLeftSon(); 
-        delete curr;
-        if(curr_parent)
+        if(toDelete_parent)
         {
-            if(isLeftSon)
+            if(toDelete->isLeftSon())
             {
-                curr_parent->setLeft(successor);
+                toDelete_parent->setLeft(successor);
             }
             else
             {
-                curr_parent->setRight(successor);
+                toDelete_parent->setRight(successor);
             }
         }
         else
         {
             root = successor;
-        }
-        root->setParent(nullptr);
+            root->setParent(nullptr);
+        }        
+        delete toDelete;
     }
-    else // case 3: has one child
+    //case 3: has one child
+    else 
     {
-        TreeNode<T>* child = (curr->getLeft() ? curr->getLeft() : curr->getRight());
-        if(curr != root)
+        TreeNode<T>* child = (toDelete->getLeft() ? toDelete->getLeft() : toDelete->getRight());
+        assert(child);
+        if(toDelete != root)
         {
-            if(curr == curr_parent->getLeft())
+            if(toDelete->isLeftSon())
             {
-                curr_parent->setLeft(child);
+                toDelete_parent->setLeft(child);
             }
             else
             {
-                curr_parent->setRight(child);
+                toDelete_parent->setRight(child);
             }
-            delete curr;
-            toBalance = curr_parent;
+            delete toDelete;
+            toBalance = toDelete_parent;
         }
         else
         {
-            delete curr;
             root = child;
             child->setParent(nullptr);
+            delete toDelete;
         }
     }
     size--;

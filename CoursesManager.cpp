@@ -109,8 +109,7 @@ void CoursesManager::GetMostViewedClasses(int numOfClasses, int* courses, int* c
   int index = 0;
   for(List_Map<int, ClassesTree>::const_reverse_iterator most_viewed_it = most_viewed.rbegin(); most_viewed_it != most_viewed.rend(); ++most_viewed_it)
   {
-    ClassesTree curr_classes = most_viewed_it->value;
-    for(ClassesTree::const_iterator classes_it = curr_classes.cbegin(); (classes_it != curr_classes.cend() && index < numOfClasses ); ++classes_it, ++index)
+    for(ClassesTree::const_iterator classes_it = most_viewed_it->value.cbegin(); (classes_it != most_viewed_it->value.cend() && index < numOfClasses ); ++classes_it, ++index)
     {
       courses[index] = (*classes_it).first;
       classes[index] = (*classes_it).second;
@@ -134,27 +133,27 @@ void CoursesManager::GetMostViewedClasses(int numOfClasses, int* courses, int* c
 
 }
 
-void CoursesManager::PrintMostViewed() //delete!
-{
-  for(List_Map<int, ClassesTree>::reverse_iterator most_viewed_it = most_viewed.rbegin(); most_viewed_it != most_viewed.rend(); most_viewed_it++)
-  {
-    int curr_time = most_viewed_it->key;
-    ClassesTree curr_classes = most_viewed_it->value;
-    for(ClassesTree::const_iterator classes_it = curr_classes.cbegin(); classes_it != curr_classes.cend(); classes_it++)
-    {
-      std::cout<<"time: "<<curr_time<<", lecture: "<<(*classes_it).first<<" ,class: "<<(*classes_it).second<<std::endl;
-    }
-  }
+// void CoursesManager::PrintMostViewed() //delete!
+// {
+//   for(List_Map<int, ClassesTree>::reverse_iterator most_viewed_it = most_viewed.rbegin(); most_viewed_it != most_viewed.rend(); most_viewed_it++)
+//   {
+//     int curr_time = most_viewed_it->key;
+//     ClassesTree curr_classes = most_viewed_it->value;
+//     for(ClassesTree::const_iterator classes_it = curr_classes.cbegin(); classes_it != curr_classes.cend(); classes_it++)
+//     {
+//       std::cout<<"time: "<<curr_time<<", lecture: "<<(*classes_it).first<<" ,class: "<<(*classes_it).second<<std::endl;
+//     }
+//   }
 
-  //print zero viewing time
-  for(Map<int const, CourseData>::const_iterator course_it = course_map.cbegin(); course_it != course_map.cend(); course_it++)
-  {
-    for(const unsigned int& index : (*course_it).second.zero_viewing_time)
-    {
-      std::cout<<"Time: 0, lecture: "<<(*course_it).first<<" ,class: "<<index<<std::endl;
-    }
-  }
-}
+//   //print zero viewing time
+//   for(Map<int const, CourseData>::const_iterator course_it = course_map.cbegin(); course_it != course_map.cend(); course_it++)
+//   {
+//     for(const unsigned int& index : (*course_it).second.zero_viewing_time)
+//     {
+//       std::cout<<"Time: 0, lecture: "<<(*course_it).first<<" ,class: "<<index<<std::endl;
+//     }
+//   }
+// }
 
 //***********************************************private methods***********************************************************
 void CoursesManager::AddTimeViewed(const int courseID, const int classID, int time)
